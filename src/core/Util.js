@@ -189,7 +189,7 @@ F.Util = {
 })();
 
 // shortcuts for most used utility functions
-F.Leaflet.extend = F.Util.extend;
+F.extend = F.Util.extend;
 F.bind = F.Util.bind;
 F.stamp = F.Util.stamp;
 F.Leaflet.setOptions = F.setOptions;

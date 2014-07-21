@@ -38,7 +38,7 @@ F.Class.extend = function (props) {
 
 	// mix static properties into the class
 	if (props.statics) {
-		F.Leaflet.extend(NewClass, props.statics);
+		F.extend(NewClass, props.statics);
 		delete props.statics;
 	}
 
@@ -54,7 +54,7 @@ F.Class.extend = function (props) {
 	}
 
 	// mix given properties into the prototype
-	F.Leaflet.extend(proto, props);
+	F.extend(proto, props);
 
 	proto._initHooks = [];
 
@@ -80,12 +80,12 @@ F.Class.extend = function (props) {
 
 // method for adding properties to prototype
 F.Class.include = function (props) {
-	F.Leaflet.extend(this.prototype, props);
+	F.extend(this.prototype, props);
 };
 
 // merge new default options to the Class
 F.Class.mergeOptions = function (options) {
-	F.Leaflet.extend(this.prototype.options, options);
+	F.extend(this.prototype.options, options);
 };
 
 // add a constructor hook

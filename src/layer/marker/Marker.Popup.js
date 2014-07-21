@@ -7,7 +7,7 @@ F.Leaflet.Marker.include({
 		var anchor = F.Leaflet.point(this.options.icon.options.popupAnchor || [0, 0])
 			.add(F.Leaflet.Popup.prototype.options.offset);
 
-		options = F.Leaflet.extend({offset: anchor}, options);
+		options = F.extend({offset: anchor}, options);
 
 		return F.Leaflet.Layer.prototype.bindPopup.call(this, content, options);
 	},

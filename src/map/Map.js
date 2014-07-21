@@ -150,7 +150,7 @@ F.Leaflet.Map = F.Evented.extend({
 	invalidateSize: function (options) {
 		if (!this._loaded) { return this; }
 
-		options = F.Leaflet.extend({
+		options = F.extend({
 			animate: false,
 			pan: true
 		}, options === true ? {animate: true} : options);

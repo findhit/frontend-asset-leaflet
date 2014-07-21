@@ -2,7 +2,7 @@
  * Extends the event handling code with double tap support for mobile browsers.
  */
 
-F.Leaflet.extend(F.DomEvent, {
+F.extend(F.DomEvent, {
 
 	_touchstart: F.Browser.msPointer ? 'MSPointerDown' : F.Browser.pointer ? 'pointerdown' : 'touchstart',
 	_touchend: F.Browser.msPointer ? 'MSPointerUp' : F.Browser.pointer ? 'pointerup' : 'touchend',

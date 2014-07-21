@@ -2,7 +2,7 @@
  * F.Leaflet.CRS.Earth is the base class for all CRS representing Earth.
  */
 
-F.Leaflet.CRS.Earth = F.Leaflet.extend({}, F.Leaflet.CRS, {
+F.Leaflet.CRS.Earth = F.extend({}, F.Leaflet.CRS, {
 	wrapLng: [-180, 180],
 
 	R: 6378137,

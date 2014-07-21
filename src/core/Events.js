@@ -211,7 +211,7 @@ F.Evented = F.Class.extend({
 
 	_propagateEvent: function (e) {
 		for (var id in this._eventParents) {
-			this._eventParents[id].fire(e.type, F.Leaflet.extend({layer: e.target}, e), true);
+			this._eventParents[id].fire(e.type, F.extend({layer: e.target}, e), true);
 		}
 	}
 });

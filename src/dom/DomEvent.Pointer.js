@@ -2,7 +2,7 @@
  * Extends F.DomEvent to provide touch support for Internet Explorer and Windows-based devices.
  */
 
-F.Leaflet.extend(F.DomEvent, {
+F.extend(F.DomEvent, {
 
 	POINTER_DOWN:   F.Browser.msPointer ? 'MSPointerDown'   : 'pointerdown',
 	POINTER_MOVE:   F.Browser.msPointer ? 'MSPointerMove'   : 'pointermove',

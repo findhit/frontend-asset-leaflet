@@ -73,7 +73,7 @@ F.Leaflet.TileLayer = F.Leaflet.GridLayer.extend({
 	},
 
 	getTileUrl: function (coords) {
-		return F.Util.template(this._url, F.Leaflet.extend({
+		return F.Util.template(this._url, F.extend({
 			r: this.options.detectRetina && F.Browser.retina && this.options.maxZoom > 0 ? '@2x' : '',
 			s: this._getSubdomain(coords),
 			x: coords.x,

@@ -18,7 +18,7 @@ F.Leaflet.TileLayer.WMS = F.Leaflet.TileLayer.extend({
 
 		this._url = url;
 
-		var wmsParams = F.Leaflet.extend({}, this.defaultWmsParams);
+		var wmsParams = F.extend({}, this.defaultWmsParams);
 
 		// all keys that are not TileLayer options go to WMS params
 		for (var i in options) {
@@ -64,7 +64,7 @@ F.Leaflet.TileLayer.WMS = F.Leaflet.TileLayer.extend({
 
 	setParams: function (params, noRedraw) {
 
-		F.Leaflet.extend(this.wmsParams, params);
+		F.extend(this.wmsParams, params);
 
 		if (!noRedraw) {
 			this.redraw();

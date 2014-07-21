@@ -14,7 +14,7 @@ F.Leaflet.Map.include({
 
 	locate: function (/*Object*/ options) {
 
-		options = this._locateOptions = F.Leaflet.extend(this._defaultLocateOptions, options);
+		options = this._locateOptions = F.extend(this._defaultLocateOptions, options);
 
 		if (!navigator.geolocation) {
 			this._handleGeolocationError({

@@ -2,7 +2,7 @@
  * A simple CRS that can be used for flat non-Earth maps like panoramas or game maps.
  */
 
-F.Leaflet.CRS.Simple = F.Leaflet.extend({}, F.Leaflet.CRS, {
+F.Leaflet.CRS.Simple = F.extend({}, F.Leaflet.CRS, {
 	projection: F.Leaflet.Projection.LonLat,
 	transformation: new F.Leaflet.Transformation(1, 0, -1, 0),
 

@@ -69,7 +69,7 @@ F.Leaflet.GeoJSON = F.Leaflet.FeatureGroup.extend({
 	}
 });
 
-F.Leaflet.extend(F.Leaflet.GeoJSON, {
+F.extend(F.Leaflet.GeoJSON, {
 	geometryToLayer: function (geojson, options) {
 
 		var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson,
@@ -159,7 +159,7 @@ F.Leaflet.extend(F.Leaflet.GeoJSON, {
 
 	getFeature: function (layer, newGeometry) {
 		return layer.feature ?
-				F.Leaflet.extend({}, layer.feature, {geometry: newGeometry}) :
+				F.extend({}, layer.feature, {geometry: newGeometry}) :
 				F.Leaflet.GeoJSON.asFeature(newGeometry);
 	},
 

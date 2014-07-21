@@ -17,8 +17,8 @@ F.Leaflet.Map.include({
 		if (this._loaded && !options.reset && options !== true) {
 
 			if (options.animate !== undefined) {
-				options.zoom = F.Leaflet.extend({animate: options.animate}, options.zoom);
-				options.pan = F.Leaflet.extend({animate: options.animate}, options.pan);
+				options.zoom = F.extend({animate: options.animate}, options.zoom);
+				options.pan = F.extend({animate: options.animate}, options.pan);
 			}
 
 			// try animating pan or zoom
