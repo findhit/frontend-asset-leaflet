@@ -433,7 +433,7 @@ F.Leaflet.Map = F.Evented.extend({
 
 		this._fadeAnimated = this.options.fadeAnimation && F.Browser.any3d;
 
-		F.DomUtil.addClass(container, 'container' +
+		F.DomUtil.addClass(container, 'leaflet container' +
 			(F.Browser.touch ? ' touch' : '') +
 			(F.Browser.retina ? ' retina' : '') +
 			(F.Browser.ielt9 ? ' oldie' : '') +
