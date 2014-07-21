@@ -7,17 +7,19 @@ var eventsKey = '_findhit_events';
 
 F.DomEvent = {
 
-	on: function (obj, types, fn, context) {
+	on: function (obj, types, a, b, c) {
+
+
 
 		if (typeof types === 'object') {
 			for (var type in types) {
-				this._on(obj, type, types[type], fn);
+				this._on(obj, type, types[type], a);
 			}
 		} else {
 			types = F.Util.splitWords(types);
 
 			for (var i = 0, len = types.length; i < len; i++) {
-				this._on(obj, types[i], fn, context);
+				this._on(obj, types[i], a, b, c);
 			}
 		}
 

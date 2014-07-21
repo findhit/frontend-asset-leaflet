@@ -97,6 +97,18 @@ F.Leaflet.Control.Scale = F.Leaflet.Control.extend({
 	}
 });
 
+
+F.Leaflet.Map.mergeOptions({
+	scaleControl: false
+});
+
+F.Leaflet.Map.addInitHook(function () {
+	if (this.options.scaleControl) {
+		this.scaleControl = new F.Leaflet.Control.Scale();
+		this.addControl(this.scaleControl);
+	}
+});
+
 F.Leaflet.control.scale = function (options) {
 	return new F.Leaflet.Control.Scale(options);
 };
