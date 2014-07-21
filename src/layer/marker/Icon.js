@@ -19,7 +19,7 @@ F.Leaflet.Icon = F.Class.extend({
 	*/
 
 	initialize: function (options) {
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 	},
 
 	createIcon: function (oldIcon) {

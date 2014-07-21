@@ -25,7 +25,7 @@ F.Leaflet.TileLayer = F.Leaflet.GridLayer.extend({
 
 		this._url = url;
 
-		options = F.Leaflet.setOptions(this, options);
+		options = F.setOptions(this, options);
 
 		// detecting retina displays, adjusting tileSize and zoom levels
 		if (options.detectRetina && F.Browser.retina && options.maxZoom > 0) {

@@ -10,7 +10,7 @@ F.Leaflet.Control.Layers = F.Leaflet.Control.extend({
 	},
 
 	initialize: function (baseLayers, overlays, options) {
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 
 		this._layers = {};
 		this._lastZIndex = 0;

@@ -13,7 +13,7 @@ F.Leaflet.ImageOverlay = F.Leaflet.Layer.extend({
 		this._url = url;
 		this._bounds = F.Leaflet.latLngBounds(bounds);
 
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 	},
 
 	onAdd: function () {

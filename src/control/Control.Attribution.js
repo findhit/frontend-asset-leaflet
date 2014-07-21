@@ -9,7 +9,7 @@ F.Leaflet.Control.Attribution = F.Leaflet.Control.extend({
 	},
 
 	initialize: function (options) {
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 
 		this._attributions = {};
 	},

@@ -192,4 +192,4 @@ F.Util = {
 F.extend = F.Util.extend;
 F.bind = F.Util.bind;
 F.stamp = F.Util.stamp;
-F.Leaflet.setOptions = F.setOptions;
+F.setOptions = F.setOptions;

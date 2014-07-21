@@ -19,7 +19,7 @@ F.Leaflet.Map = F.Evented.extend({
 	},
 
 	initialize: function (id, options) { // (HTMLElement or String, Object)
-		options = F.Leaflet.setOptions(this, options);
+		options = F.setOptions(this, options);
 
 		this._initContainer(id);
 		this._initLayout();

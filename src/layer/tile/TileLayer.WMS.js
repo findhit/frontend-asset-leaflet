@@ -27,7 +27,7 @@ F.Leaflet.TileLayer.WMS = F.Leaflet.TileLayer.extend({
 			}
 		}
 
-		options = F.Leaflet.setOptions(this, options);
+		options = F.setOptions(this, options);
 
 		wmsParams.width = wmsParams.height =
 				options.tileSize * (options.detectRetina && F.Browser.retina ? 2 : 1);

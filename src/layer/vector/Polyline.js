@@ -12,7 +12,7 @@ F.Leaflet.Polyline = F.Leaflet.Path.extend({
 	},
 
 	initialize: function (latlngs, options) {
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 		this._setLatLngs(latlngs);
 	},
 

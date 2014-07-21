@@ -28,7 +28,7 @@ F.Leaflet.Popup = F.Leaflet.Layer.extend({
 	},
 
 	initialize: function (options, source) {
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 
 		this._source = source;
 	},

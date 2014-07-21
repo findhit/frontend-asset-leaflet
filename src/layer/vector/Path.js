@@ -52,7 +52,7 @@ F.Leaflet.Path = F.Leaflet.Layer.extend({
 	},
 
 	setStyle: function (style) {
-		F.Leaflet.setOptions(this, style);
+		F.setOptions(this, style);
 		if (this._renderer) {
 			this._renderer._updateStyle(this);
 		}

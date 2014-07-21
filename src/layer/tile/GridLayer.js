@@ -24,7 +24,7 @@ F.Leaflet.GridLayer = F.Leaflet.Layer.extend({
 	},
 
 	initialize: function (options) {
-		options = F.Leaflet.setOptions(this, options);
+		options = F.setOptions(this, options);
 	},
 
 	onAdd: function () {

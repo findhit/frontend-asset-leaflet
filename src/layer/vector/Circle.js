@@ -6,7 +6,7 @@
 F.Leaflet.Circle = F.Leaflet.CircleMarker.extend({
 
 	initialize: function (latlng, radius, options) {
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 		this._latlng = F.Leaflet.latLng(latlng);
 		this._mRadius = radius;
 	},

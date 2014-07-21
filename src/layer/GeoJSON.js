@@ -5,7 +5,7 @@
 F.Leaflet.GeoJSON = F.Leaflet.FeatureGroup.extend({
 
 	initialize: function (geojson, options) {
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 
 		this._layers = {};
 

@@ -12,7 +12,7 @@ F.Leaflet.Renderer = F.Leaflet.Layer.extend({
 	},
 
 	initialize: function (options) {
-		F.Leaflet.setOptions(this, options);
+		F.setOptions(this, options);
 		F.stamp(this);
 	},
 
