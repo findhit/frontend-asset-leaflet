@@ -1,13 +1,13 @@
 /*
- * L.Marker is used to display clickable/draggable icons on the map.
+ * F.Leaflet.Marker is used to display clickable/draggable icons on the map.
  */
 
-L.Marker = L.Layer.extend({
+F.Leaflet.Marker = F.Leaflet.Layer.extend({
 
 	options: {
 		pane: 'markerPane',
 
-		icon: new L.Icon.Default(),
+		icon: new F.Leaflet.Icon.Default(),
 		// title: '',
 		// alt: '',
 		clickable: true,
@@ -20,8 +20,8 @@ L.Marker = L.Layer.extend({
 	},
 
 	initialize: function (latlng, options) {
-		L.setOptions(this, options);
-		this._latlng = L.latLng(latlng);
+		F.Leaflet.setOptions(this, options);
+		this._latlng = F.Leaflet.latLng(latlng);
 	},
 
 	onAdd: function (map) {
@@ -56,7 +56,7 @@ L.Marker = L.Layer.extend({
 
 	setLatLng: function (latlng) {
 		var oldLatLng = this._latlng;
-		this._latlng = L.latLng(latlng);
+		this._latlng = F.Leaflet.latLng(latlng);
 		this.update();
 		return this.fire('move', { oldLatLng: oldLatLng, latlng: this._latlng });
 	},
@@ -94,7 +94,7 @@ L.Marker = L.Layer.extend({
 
 	_initIcon: function () {
 		var options = this.options,
-		    classToAdd = 'leaflet-zoom-' + (this._zoomAnimated ? 'animated' : 'hide');
+		    classToAdd = 'zoom-' + (this._zoomAnimated ? 'animated' : 'hide');
 
 		var icon = options.icon.createIcon(this._icon),
 			addIcon = false;
@@ -114,7 +114,7 @@ L.Marker = L.Layer.extend({
 			}
 		}
 
-		L.DomUtil.addClass(icon, classToAdd);
+		F.DomUtil.addClass(icon, classToAdd);
 
 		if (options.keyboard) {
 			icon.tabIndex = '0';
@@ -124,7 +124,7 @@ L.Marker = L.Layer.extend({
 		this._initInteraction();
 
 		if (options.riseOnHover) {
-			L.DomEvent.on(icon, {
+			F.DomEvent.on(icon, {
 				mouseover: this._bringToFront,
 				mouseout: this._resetZIndex
 			}, this);
@@ -139,7 +139,7 @@ L.Marker = L.Layer.extend({
 		}
 
 		if (newShadow) {
-			L.DomUtil.addClass(newShadow, classToAdd);
+			F.DomUtil.addClass(newShadow, classToAdd);
 		}
 		this._shadow = newShadow;
 
@@ -159,29 +159,29 @@ L.Marker = L.Layer.extend({
 
 	_removeIcon: function () {
 		if (this.options.riseOnHover) {
-			L.DomEvent.off(this._icon, {
+			F.DomEvent.off(this._icon, {
 				mouseover: this._bringToFront,
 			    mouseout: this._resetZIndex
 			}, this);
 		}
 
-		L.DomUtil.remove(this._icon);
+		F.DomUtil.remove(this._icon);
 
 		this._icon = null;
 	},
 
 	_removeShadow: function () {
 		if (this._shadow) {
-			L.DomUtil.remove(this._shadow);
+			F.DomUtil.remove(this._shadow);
 		}
 		this._shadow = null;
 	},
 
 	_setPos: function (pos) {
-		L.DomUtil.setPosition(this._icon, pos);
+		F.DomUtil.setPosition(this._icon, pos);
 
 		if (this._shadow) {
-			L.DomUtil.setPosition(this._shadow, pos);
+			F.DomUtil.setPosition(this._shadow, pos);
 		}
 
 		this._zIndex = pos.y + this.options.zIndexOffset;
@@ -203,13 +203,13 @@ L.Marker = L.Layer.extend({
 
 		if (!this.options.clickable) { return; }
 
-		L.DomUtil.addClass(this._icon, 'leaflet-clickable');
+		F.DomUtil.addClass(this._icon, 'clickable');
 
-		L.DomEvent.on(this._icon, 'click dblclick mousedown mouseup mouseover mousemove mouseout contextmenu keypress',
+		F.DomEvent.on(this._icon, 'click dblclick mousedown mouseup mouseover mousemove mouseout contextmenu keypress',
 				this._fireMouseEvent, this);
 
-		if (L.Handler.MarkerDrag) {
-			this.dragging = new L.Handler.MarkerDrag(this);
+		if (F.Leaflet.Handler.MarkerDrag) {
+			this.dragging = new F.Leaflet.Handler.MarkerDrag(this);
 
 			if (this.options.draggable) {
 				this.dragging.enable();
@@ -220,7 +220,7 @@ L.Marker = L.Layer.extend({
 	_fireMouseEvent: function (e, type) {
 		// to prevent outline when clicking on keyboard-focusable marker
 		if (e.type === 'mousedown') {
-			L.DomEvent.preventDefault(e);
+			F.DomEvent.preventDefault(e);
 		}
 
 		if (e.type === 'click' && this.dragging && this.dragging.moved()) { return; }
@@ -246,10 +246,10 @@ L.Marker = L.Layer.extend({
 	_updateOpacity: function () {
 		var opacity = this.options.opacity;
 
-		L.DomUtil.setOpacity(this._icon, opacity);
+		F.DomUtil.setOpacity(this._icon, opacity);
 
 		if (this._shadow) {
-			L.DomUtil.setOpacity(this._shadow, opacity);
+			F.DomUtil.setOpacity(this._shadow, opacity);
 		}
 	},
 
@@ -262,6 +262,6 @@ L.Marker = L.Layer.extend({
 	}
 });
 
-L.marker = function (latlng, options) {
-	return new L.Marker(latlng, options);
+F.Leaflet.marker = function (latlng, options) {
+	return new F.Leaflet.Marker(latlng, options);
 };

@@ -1,21 +1,21 @@
 /*
- * L.Point represents a point with x and y coordinates.
+ * F.Leaflet.Point represents a point with x and y coordinates.
  */
 
-L.Point = function (/*Number*/ x, /*Number*/ y, /*Boolean*/ round) {
+F.Leaflet.Point = function (/*Number*/ x, /*Number*/ y, /*Boolean*/ round) {
 	this.x = (round ? Math.round(x) : x);
 	this.y = (round ? Math.round(y) : y);
 };
 
-L.Point.prototype = {
+F.Leaflet.Point.prototype = {
 
 	clone: function () {
-		return new L.Point(this.x, this.y);
+		return new F.Leaflet.Point(this.x, this.y);
 	},
 
 	// non-destructive, returns a new point
 	add: function (point) {
-		return this.clone()._add(L.point(point));
+		return this.clone()._add(F.Leaflet.point(point));
 	},
 
 	// destructive, used directly for performance in situations where it's safe to modify existing point
@@ -26,7 +26,7 @@ L.Point.prototype = {
 	},
 
 	subtract: function (point) {
-		return this.clone()._subtract(L.point(point));
+		return this.clone()._subtract(F.Leaflet.point(point));
 	},
 
 	_subtract: function (point) {
@@ -86,7 +86,7 @@ L.Point.prototype = {
 	},
 
 	distanceTo: function (point) {
-		point = L.point(point);
+		point = F.Leaflet.point(point);
 
 		var x = point.x - this.x,
 		    y = point.y - this.y;
@@ -95,14 +95,14 @@ L.Point.prototype = {
 	},
 
 	equals: function (point) {
-		point = L.point(point);
+		point = F.Leaflet.point(point);
 
 		return point.x === this.x &&
 		       point.y === this.y;
 	},
 
 	contains: function (point) {
-		point = L.point(point);
+		point = F.Leaflet.point(point);
 
 		return Math.abs(point.x) <= Math.abs(this.x) &&
 		       Math.abs(point.y) <= Math.abs(this.y);
@@ -110,20 +110,20 @@ L.Point.prototype = {
 
 	toString: function () {
 		return 'Point(' +
-		        L.Util.formatNum(this.x) + ', ' +
-		        L.Util.formatNum(this.y) + ')';
+		        F.Util.formatNum(this.x) + ', ' +
+		        F.Util.formatNum(this.y) + ')';
 	}
 };
 
-L.point = function (x, y, round) {
-	if (x instanceof L.Point) {
+F.Leaflet.point = function (x, y, round) {
+	if (x instanceof F.Leaflet.Point) {
 		return x;
 	}
-	if (L.Util.isArray(x)) {
-		return new L.Point(x[0], x[1]);
+	if (F.Util.isArray(x)) {
+		return new F.Leaflet.Point(x[0], x[1]);
 	}
 	if (x === undefined || x === null) {
 		return x;
 	}
-	return new L.Point(x, y, round);
+	return new F.Leaflet.Point(x, y, round);
 };

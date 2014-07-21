@@ -1,11 +1,11 @@
 /*
- * L.SVG renders vector layers with SVG. All SVG-specific code goes here.
+ * F.Leaflet.SVG renders vector layers with SVG. All SVG-specific code goes here.
  */
 
-L.SVG = L.Renderer.extend({
+F.Leaflet.SVG = F.Leaflet.Renderer.extend({
 
 	_initContainer: function () {
-		this._container = L.SVG.create('svg');
+		this._container = F.Leaflet.SVG.create('svg');
 
 		this._paths = {};
 		this._initEvents();
@@ -17,7 +17,7 @@ L.SVG = L.Renderer.extend({
 	_update: function () {
 		if (this._map._animatingZoom && this._bounds) { return; }
 
-		L.Renderer.prototype._update.call(this);
+		F.Leaflet.Renderer.prototype._update.call(this);
 
 		var b = this._bounds,
 		    size = b.getSize(),
@@ -25,11 +25,11 @@ L.SVG = L.Renderer.extend({
 		    pane = this.getPane();
 
 		// hack to make flicker on drag end on mobile webkit less irritating
-		if (L.Browser.mobileWebkit) {
+		if (F.Browser.mobileWebkit) {
 			pane.removeChild(container);
 		}
 
-		L.DomUtil.setPosition(container, b.min);
+		F.DomUtil.setPosition(container, b.min);
 
 		// set size of svg-container if changed
 		if (!this._svgSize || !this._svgSize.equals(size)) {
@@ -39,10 +39,10 @@ L.SVG = L.Renderer.extend({
 		}
 
 		// movement: update container viewBox so that we don't have to change coordinates of individual layers
-		L.DomUtil.setPosition(container, b.min);
+		F.DomUtil.setPosition(container, b.min);
 		container.setAttribute('viewBox', [b.min.x, b.min.y, size.x, size.y].join(' '));
 		
-		if (L.Browser.mobileWebkit) {
+		if (F.Browser.mobileWebkit) {
 			pane.appendChild(container);
 		}
 	},
@@ -50,14 +50,14 @@ L.SVG = L.Renderer.extend({
 	// methods below are called by vector layers implementations
 
 	_initPath: function (layer) {
-		var path = layer._path = L.SVG.create('path');
+		var path = layer._path = F.Leaflet.SVG.create('path');
 
 		if (layer.options.className) {
-			L.DomUtil.addClass(path, layer.options.className);
+			F.DomUtil.addClass(path, layer.options.className);
 		}
 
 		if (layer.options.clickable) {
-			L.DomUtil.addClass(path, 'leaflet-clickable');
+			F.DomUtil.addClass(path, 'clickable');
 		}
 
 		this._updateStyle(layer);
@@ -66,13 +66,13 @@ L.SVG = L.Renderer.extend({
 	_addPath: function (layer) {
 		var path = layer._path;
 		this._container.appendChild(path);
-		this._paths[L.stamp(path)] = layer;
+		this._paths[F.stamp(path)] = layer;
 	},
 
 	_removePath: function (layer) {
 		var path = layer._path;
-		L.DomUtil.remove(path);
-		delete this._paths[L.stamp(path)];
+		F.DomUtil.remove(path);
+		delete this._paths[F.stamp(path)];
 	},
 
 	_updatePath: function (layer) {
@@ -120,7 +120,7 @@ L.SVG = L.Renderer.extend({
 	},
 
 	_updatePoly: function (layer, closed) {
-		this._setPath(layer, L.SVG.pointsToPath(layer._parts, closed));
+		this._setPath(layer, F.Leaflet.SVG.pointsToPath(layer._parts, closed));
 	},
 
 	_updateCircle: function (layer) {
@@ -144,21 +144,21 @@ L.SVG = L.Renderer.extend({
 
 	// SVG does not have the concept of zIndex so we resort to changing the DOM order of elements
 	_bringToFront: function (layer) {
-		L.DomUtil.toFront(layer._path);
+		F.DomUtil.toFront(layer._path);
 	},
 
 	_bringToBack: function (layer) {
-		L.DomUtil.toBack(layer._path);
+		F.DomUtil.toBack(layer._path);
 	},
 
-	// TODO remove duplication with L.Map
+	// TODO remove duplication with F.Leaflet.Map
 	_initEvents: function () {
-		L.DomEvent.on(this._container, 'click dblclick mousedown mouseup mouseover mouseout mousemove contextmenu',
+		F.DomEvent.on(this._container, 'click dblclick mousedown mouseup mouseover mouseout mousemove contextmenu',
 				this._fireMouseEvent, this);
 	},
 
 	_fireMouseEvent: function (e) {
-		var path = this._paths[L.stamp(e.target || e.srcElement)];
+		var path = this._paths[F.stamp(e.target || e.srcElement)];
 		if (path) {
 			path._fireMouseEvent(e);
 		}
@@ -166,12 +166,12 @@ L.SVG = L.Renderer.extend({
 });
 
 
-L.extend(L.SVG, {
+F.Leaflet.extend(F.Leaflet.SVG, {
 	create: function (name) {
 		return document.createElementNS('http://www.w3.org/2000/svg', name);
 	},
 
-	// generates SVG path string for multiple rings, with each ring turning into "M..L..L.." instructions
+	// generates SVG path string for multiple rings, with each ring turning into "M..F.Leaflet..F.Leaflet.." instructions
 	pointsToPath: function (rings, closed) {
 		var str = '',
 			i, j, len, len2, points, p;
@@ -185,7 +185,7 @@ L.extend(L.SVG, {
 			}
 
 			// closes the ring for polygons; "x" is VML syntax
-			str += closed ? (L.Browser.svg ? 'z' : 'x') : '';
+			str += closed ? (F.Browser.svg ? 'z' : 'x') : '';
 		}
 
 		// SVG complains about empty path strings
@@ -193,8 +193,8 @@ L.extend(L.SVG, {
 	}
 });
 
-L.Browser.svg = !!(document.createElementNS && L.SVG.create('svg').createSVGRect);
+F.Browser.svg = !!(document.createElementNS && F.Leaflet.SVG.create('svg').createSVGRect);
 
-L.svg = function (options) {
-	return L.Browser.svg || L.Browser.vml ? new L.SVG(options) : null;
+F.Leaflet.svg = function (options) {
+	return F.Browser.svg || F.Browser.vml ? new F.Leaflet.SVG(options) : null;
 };

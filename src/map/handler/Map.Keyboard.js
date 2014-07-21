@@ -1,14 +1,14 @@
 /*
- * L.Map.Keyboard is handling keyboard interaction with the map, enabled by default.
+ * F.Leaflet.Map.Keyboard is handling keyboard interaction with the map, enabled by default.
  */
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	keyboard: true,
 	keyboardPanOffset: 80,
 	keyboardZoomOffset: 1
 });
 
-L.Map.Keyboard = L.Handler.extend({
+F.Leaflet.Map.Keyboard = F.Leaflet.Handler.extend({
 
 	keyCodes: {
 		left:    [37],
@@ -34,7 +34,7 @@ L.Map.Keyboard = L.Handler.extend({
 			container.tabIndex = '0';
 		}
 
-		L.DomEvent.on(container, {
+		F.DomEvent.on(container, {
 		    focus: this._onFocus,
 		    blur: this._onBlur,
 		    mousedown: this._onMouseDown
@@ -49,7 +49,7 @@ L.Map.Keyboard = L.Handler.extend({
 	removeHooks: function () {
 		this._removeHooks();
 
-		L.DomEvent.off(this._map._container, {
+		F.DomEvent.off(this._map._container, {
 		    focus: this._onFocus,
 		    blur: this._onBlur,
 		    mousedown: this._onMouseDown
@@ -117,11 +117,11 @@ L.Map.Keyboard = L.Handler.extend({
 	},
 
 	_addHooks: function () {
-		L.DomEvent.on(document, 'keydown', this._onKeyDown, this);
+		F.DomEvent.on(document, 'keydown', this._onKeyDown, this);
 	},
 
 	_removeHooks: function () {
-		L.DomEvent.off(document, 'keydown', this._onKeyDown, this);
+		F.DomEvent.off(document, 'keydown', this._onKeyDown, this);
 	},
 
 	_onKeyDown: function (e) {
@@ -147,8 +147,8 @@ L.Map.Keyboard = L.Handler.extend({
 			return;
 		}
 
-		L.DomEvent.stop(e);
+		F.DomEvent.stop(e);
 	}
 });
 
-L.Map.addInitHook('addHandler', 'keyboard', L.Map.Keyboard);
+F.Leaflet.Map.addInitHook('addHandler', 'keyboard', F.Leaflet.Map.Keyboard);

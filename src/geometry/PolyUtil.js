@@ -1,22 +1,22 @@
 /*
- * L.PolyUtil contains utility functions for polygons (clipping, etc.).
+ * F.Leaflet.PolyUtil contains utility functions for polygons (clipping, etc.).
  */
 
 /*jshint bitwise:false */ // allow bitwise operations here
 
-L.PolyUtil = {};
+F.Leaflet.PolyUtil = {};
 
 /*
  * Sutherland-Hodgeman polygon clipping algorithm.
  * Used to avoid rendering parts of a polygon that are not currently visible.
  */
-L.PolyUtil.clipPolygon = function (points, bounds) {
+F.Leaflet.PolyUtil.clipPolygon = function (points, bounds) {
 	var clippedPoints,
 	    edges = [1, 4, 2, 8],
 	    i, j, k,
 	    a, b,
 	    len, edge, p,
-	    lu = L.LineUtil;
+	    lu = F.Leaflet.LineUtil;
 
 	for (i = 0, len = points.length; i < len; i++) {
 		points[i]._code = lu._getBitCode(points[i], bounds);

@@ -1,8 +1,8 @@
 /*
- * L.DomUtil contains various utility functions for working with DOM.
+ * F.DomUtil contains various utility functions for working with DOM.
  */
 
-L.DomUtil = {
+F.DomUtil = {
 	get: function (id) {
 		return typeof id === 'string' ? document.getElementById(id) : id;
 	},
@@ -57,19 +57,19 @@ L.DomUtil = {
 		if (el.classList !== undefined) {
 			return el.classList.contains(name);
 		}
-		var className = L.DomUtil.getClass(el);
+		var className = F.DomUtil.getClass(el);
 		return className.length > 0 && new RegExp('(^|\\s)' + name + '(\\s|$)').test(className);
 	},
 
 	addClass: function (el, name) {
 		if (el.classList !== undefined) {
-			var classes = L.Util.splitWords(name);
+			var classes = F.Util.splitWords(name);
 			for (var i = 0, len = classes.length; i < len; i++) {
 				el.classList.add(classes[i]);
 			}
-		} else if (!L.DomUtil.hasClass(el, name)) {
-			var className = L.DomUtil.getClass(el);
-			L.DomUtil.setClass(el, (className ? className + ' ' : '') + name);
+		} else if (!F.DomUtil.hasClass(el, name)) {
+			var className = F.DomUtil.getClass(el);
+			F.DomUtil.setClass(el, (className ? className + ' ' : '') + name);
 		}
 	},
 
@@ -77,7 +77,7 @@ L.DomUtil = {
 		if (el.classList !== undefined) {
 			el.classList.remove(name);
 		} else {
-			L.DomUtil.setClass(el, L.Util.trim((' ' + L.DomUtil.getClass(el) + ' ').replace(' ' + name + ' ', ' ')));
+			F.DomUtil.setClass(el, F.Util.trim((' ' + F.DomUtil.getClass(el) + ' ').replace(' ' + name + ' ', ' ')));
 		}
 	},
 
@@ -137,9 +137,9 @@ L.DomUtil = {
 	},
 
 	setTransform: function (el, offset, scale) {
-		var pos = offset || new L.Point(0, 0);
+		var pos = offset || new F.Leaflet.Point(0, 0);
 
-		el.style[L.DomUtil.TRANSFORM] =
+		el.style[F.DomUtil.TRANSFORM] =
 			'translate3d(' + pos.x + 'px,' + pos.y + 'px' + ',0)' + (scale ? ' scale(' + scale + ')' : '');
 	},
 
@@ -148,8 +148,8 @@ L.DomUtil = {
 		// jshint camelcase: false
 		el._leaflet_pos = point;
 
-		if (L.Browser.any3d && !no3d) {
-			L.DomUtil.setTransform(el, point);
+		if (F.Browser.any3d && !no3d) {
+			F.DomUtil.setTransform(el, point);
 		} else {
 			el.style.left = point.x + 'px';
 			el.style.top = point.y + 'px';
@@ -169,40 +169,40 @@ L.DomUtil = {
 (function () {
 	// prefix style property names
 
-	L.DomUtil.TRANSFORM = L.DomUtil.testProp(
+	F.DomUtil.TRANSFORM = F.DomUtil.testProp(
 			['transform', 'WebkitTransform', 'OTransform', 'MozTransform', 'msTransform']);
 
 
 	// webkitTransition comes first because some browser versions that drop vendor prefix don't do
 	// the same for the transitionend event, in particular the Android 4.1 stock browser
 
-	var transition = L.DomUtil.TRANSITION = L.DomUtil.testProp(
+	var transition = F.DomUtil.TRANSITION = F.DomUtil.testProp(
 			['webkitTransition', 'transition', 'OTransition', 'MozTransition', 'msTransition']);
 
-	L.DomUtil.TRANSITION_END =
+	F.DomUtil.TRANSITION_END =
 			transition === 'webkitTransition' || transition === 'OTransition' ? transition + 'End' : 'transitionend';
 
 
 	if ('onselectstart' in document) {
-		L.DomUtil.disableTextSelection = function () {
-			L.DomEvent.on(window, 'selectstart', L.DomEvent.preventDefault);
+		F.DomUtil.disableTextSelection = function () {
+			F.DomEvent.on(window, 'selectstart', F.DomEvent.preventDefault);
 		};
-		L.DomUtil.enableTextSelection = function () {
-			L.DomEvent.off(window, 'selectstart', L.DomEvent.preventDefault);
+		F.DomUtil.enableTextSelection = function () {
+			F.DomEvent.off(window, 'selectstart', F.DomEvent.preventDefault);
 		};
 
 	} else {
-		var userSelectProperty = L.DomUtil.testProp(
+		var userSelectProperty = F.DomUtil.testProp(
 			['userSelect', 'WebkitUserSelect', 'OUserSelect', 'MozUserSelect', 'msUserSelect']);
 
-		L.DomUtil.disableTextSelection = function () {
+		F.DomUtil.disableTextSelection = function () {
 			if (userSelectProperty) {
 				var style = document.documentElement.style;
 				this._userSelect = style[userSelectProperty];
 				style[userSelectProperty] = 'none';
 			}
 		};
-		L.DomUtil.enableTextSelection = function () {
+		F.DomUtil.enableTextSelection = function () {
 			if (userSelectProperty) {
 				document.documentElement.style[userSelectProperty] = this._userSelect;
 				delete this._userSelect;
@@ -210,10 +210,10 @@ L.DomUtil = {
 		};
 	}
 
-	L.DomUtil.disableImageDrag = function () {
-		L.DomEvent.on(window, 'dragstart', L.DomEvent.preventDefault);
+	F.DomUtil.disableImageDrag = function () {
+		F.DomEvent.on(window, 'dragstart', F.DomEvent.preventDefault);
 	};
-	L.DomUtil.enableImageDrag = function () {
-		L.DomEvent.off(window, 'dragstart', L.DomEvent.preventDefault);
+	F.DomUtil.enableImageDrag = function () {
+		F.DomEvent.off(window, 'dragstart', F.DomEvent.preventDefault);
 	};
 })();

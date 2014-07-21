@@ -1,15 +1,15 @@
 /*
- * L.Transformation is an utility class to perform simple point transformations through a 2d-matrix.
+ * F.Leaflet.Transformation is an utility class to perform simple point transformations through a 2d-matrix.
  */
 
-L.Transformation = function (a, b, c, d) {
+F.Leaflet.Transformation = function (a, b, c, d) {
 	this._a = a;
 	this._b = b;
 	this._c = c;
 	this._d = d;
 };
 
-L.Transformation.prototype = {
+F.Leaflet.Transformation.prototype = {
 	transform: function (point, scale) { // (Point, Number) -> Point
 		return this._transform(point.clone(), scale);
 	},
@@ -24,7 +24,7 @@ L.Transformation.prototype = {
 
 	untransform: function (point, scale) {
 		scale = scale || 1;
-		return new L.Point(
+		return new F.Leaflet.Point(
 		        (point.x / scale - this._b) / this._a,
 		        (point.y / scale - this._d) / this._c);
 	}

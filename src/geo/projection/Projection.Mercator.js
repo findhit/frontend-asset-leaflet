@@ -3,11 +3,11 @@
  * Less popular than spherical mercator; used by projections like EPSG:3395.
  */
 
-L.Projection.Mercator = {
+F.Leaflet.Projection.Mercator = {
 	R: 6378137,
 	R_MINOR: 6356752.314245179,
 
-	bounds: L.bounds([-20037508.34279, -15496570.73972], [20037508.34279, 18764656.23138]),
+	bounds: F.Leaflet.bounds([-20037508.34279, -15496570.73972], [20037508.34279, 18764656.23138]),
 
 	project: function (latlng) {
 		var d = Math.PI / 180,
@@ -20,7 +20,7 @@ L.Projection.Mercator = {
 		var ts = Math.tan(Math.PI / 4 - y / 2) / Math.pow((1 - con) / (1 + con), e / 2);
 		y = -r * Math.log(Math.max(ts, 1E-10));
 
-		return new L.Point(latlng.lng * d * r, y);
+		return new F.Leaflet.Point(latlng.lng * d * r, y);
 	},
 
 	unproject: function (point) {
@@ -38,6 +38,6 @@ L.Projection.Mercator = {
 			phi += dphi;
 		}
 
-		return new L.LatLng(phi * d, point.x * d / r);
+		return new F.Leaflet.LatLng(phi * d, point.x * d / r);
 	}
 };

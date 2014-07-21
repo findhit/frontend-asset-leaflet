@@ -1,13 +1,13 @@
 /*
- * L.Circle is a circle overlay (with a certain radius in meters).
+ * F.Leaflet.Circle is a circle overlay (with a certain radius in meters).
  * It's an approximation and starts to diverge from a real circle closer to poles (due to projection distortion)
  */
 
-L.Circle = L.CircleMarker.extend({
+F.Leaflet.Circle = F.Leaflet.CircleMarker.extend({
 
 	initialize: function (latlng, radius, options) {
-		L.setOptions(this, options);
-		this._latlng = L.latLng(latlng);
+		F.Leaflet.setOptions(this, options);
+		this._latlng = F.Leaflet.latLng(latlng);
 		this._mRadius = radius;
 	},
 
@@ -23,12 +23,12 @@ L.Circle = L.CircleMarker.extend({
 	getBounds: function () {
 		var half = [this._radius, this._radiusY];
 
-		return new L.LatLngBounds(
+		return new F.Leaflet.LatLngBounds(
 			this._map.layerPointToLatLng(this._point.subtract(half)),
 			this._map.layerPointToLatLng(this._point.add(half)));
 	},
 
-	setStyle: L.Path.prototype.setStyle,
+	setStyle: F.Leaflet.Path.prototype.setStyle,
 
 	_project: function () {
 
@@ -37,9 +37,9 @@ L.Circle = L.CircleMarker.extend({
 		    map = this._map,
 		    crs = map.options.crs;
 
-		if (crs.distance === L.CRS.Earth.distance) {
+		if (crs.distance === F.Leaflet.CRS.Earth.distance) {
 			var d = Math.PI / 180,
-			    latR = (this._mRadius / L.CRS.Earth.R) / d,
+			    latR = (this._mRadius / F.Leaflet.CRS.Earth.R) / d,
 			    top = map.project([lat + latR, lng]),
 			    bottom = map.project([lat - latR, lng]),
 			    p = top.add(bottom).divideBy(2),
@@ -62,6 +62,6 @@ L.Circle = L.CircleMarker.extend({
 	}
 });
 
-L.circle = function (latlng, radius, options) {
-	return new L.Circle(latlng, radius, options);
+F.Leaflet.circle = function (latlng, radius, options) {
+	return new F.Leaflet.Circle(latlng, radius, options);
 };

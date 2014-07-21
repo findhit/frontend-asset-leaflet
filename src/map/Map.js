@@ -1,11 +1,11 @@
 /*
- * L.Map is the central class of the API - it is used to create a map.
+ * F.Leaflet.Map is the central class of the API - it is used to create a map.
  */
 
-L.Map = L.Evented.extend({
+F.Leaflet.Map = F.Evented.extend({
 
 	options: {
-		crs: L.CRS.EPSG3857,
+		crs: F.Leaflet.CRS.EPSG3857,
 
 		/*
 		center: LatLng,
@@ -19,13 +19,13 @@ L.Map = L.Evented.extend({
 	},
 
 	initialize: function (id, options) { // (HTMLElement or String, Object)
-		options = L.setOptions(this, options);
+		options = F.Leaflet.setOptions(this, options);
 
 		this._initContainer(id);
 		this._initLayout();
 
 		// hack for https://github.com/Leaflet/Leaflet/issues/1980
-		this._onResize = L.bind(this._onResize, this);
+		this._onResize = F.bind(this._onResize, this);
 
 		this._initEvents();
 
@@ -34,7 +34,7 @@ L.Map = L.Evented.extend({
 		}
 
 		if (options.center && options.zoom !== undefined) {
-			this.setView(L.latLng(options.center), options.zoom, {reset: true});
+			this.setView(F.Leaflet.latLng(options.center), options.zoom, {reset: true});
 		}
 
 		this._handlers = [];
@@ -52,7 +52,7 @@ L.Map = L.Evented.extend({
 	// replaced by animation-powered implementation in Map.PanAnimation.js
 	setView: function (center, zoom) {
 		zoom = zoom === undefined ? this.getZoom() : zoom;
-		this._resetView(L.latLng(center), this._limitZoom(zoom));
+		this._resetView(F.Leaflet.latLng(center), this._limitZoom(zoom));
 		return this;
 	},
 
@@ -75,7 +75,7 @@ L.Map = L.Evented.extend({
 	setZoomAround: function (latlng, zoom, options) {
 		var scale = this.getZoomScale(zoom),
 		    viewHalf = this.getSize().divideBy(2),
-		    containerPoint = latlng instanceof L.Point ? latlng : this.latLngToContainerPoint(latlng),
+		    containerPoint = latlng instanceof F.Leaflet.Point ? latlng : this.latLngToContainerPoint(latlng),
 
 		    centerOffset = containerPoint.subtract(viewHalf).multiplyBy(1 - 1 / scale),
 		    newCenter = this.containerPointToLatLng(viewHalf.add(centerOffset));
@@ -86,10 +86,10 @@ L.Map = L.Evented.extend({
 	fitBounds: function (bounds, options) {
 
 		options = options || {};
-		bounds = bounds.getBounds ? bounds.getBounds() : L.latLngBounds(bounds);
+		bounds = bounds.getBounds ? bounds.getBounds() : F.Leaflet.latLngBounds(bounds);
 
-		var paddingTL = L.point(options.paddingTopLeft || options.padding || [0, 0]),
-		    paddingBR = L.point(options.paddingBottomRight || options.padding || [0, 0]),
+		var paddingTL = F.Leaflet.point(options.paddingTopLeft || options.padding || [0, 0]),
+		    paddingBR = F.Leaflet.point(options.paddingBottomRight || options.padding || [0, 0]),
 
 		    zoom = this.getBoundsZoom(bounds, false, paddingTL.add(paddingBR));
 
@@ -116,14 +116,14 @@ L.Map = L.Evented.extend({
 		// replaced with animated panBy in Map.PanAnimation.js
 		this.fire('movestart');
 
-		this._rawPanBy(L.point(offset));
+		this._rawPanBy(F.Leaflet.point(offset));
 
 		this.fire('move');
 		return this.fire('moveend');
 	},
 
 	setMaxBounds: function (bounds) {
-		bounds = L.latLngBounds(bounds);
+		bounds = F.Leaflet.latLngBounds(bounds);
 
 		this.options.maxBounds = bounds;
 
@@ -150,7 +150,7 @@ L.Map = L.Evented.extend({
 	invalidateSize: function (options) {
 		if (!this._loaded) { return this; }
 
-		options = L.extend({
+		options = F.Leaflet.extend({
 			animate: false,
 			pan: true
 		}, options === true ? {animate: true} : options);
@@ -178,7 +178,7 @@ L.Map = L.Evented.extend({
 
 			if (options.debounceMoveend) {
 				clearTimeout(this._sizeTimer);
-				this._sizeTimer = setTimeout(L.bind(this.fire, this, 'moveend'), 200);
+				this._sizeTimer = setTimeout(F.bind(this.fire, this, 'moveend'), 200);
 			} else {
 				this.fire('moveend');
 			}
@@ -216,7 +216,7 @@ L.Map = L.Evented.extend({
 			this._container._leaflet = undefined;
 		}
 
-		L.DomUtil.remove(this._mapPane);
+		F.DomUtil.remove(this._mapPane);
 
 		if (this._clearControlPos) {
 			this._clearControlPos();
@@ -232,8 +232,8 @@ L.Map = L.Evented.extend({
 	},
 
 	createPane: function (name, container) {
-		var className = 'leaflet-pane' + (name ? ' leaflet-' + name.replace('Pane', '') + '-pane' : ''),
-		    pane = L.DomUtil.create('div', className, container || this._mapPane);
+		var className = 'pane' + (name ? ' ' + name.replace('Pane', '') + '-pane' : ''),
+		    pane = F.DomUtil.create('div', className, container || this._mapPane);
 
 		if (name) {
 			this._panes[name] = pane;
@@ -262,7 +262,7 @@ L.Map = L.Evented.extend({
 		    sw = this.unproject(bounds.getBottomLeft()),
 		    ne = this.unproject(bounds.getTopRight());
 
-		return new L.LatLngBounds(sw, ne);
+		return new F.Leaflet.LatLngBounds(sw, ne);
 	},
 
 	getMinZoom: function () {
@@ -276,7 +276,7 @@ L.Map = L.Evented.extend({
 	},
 
 	getBoundsZoom: function (bounds, inside, padding) { // (LatLngBounds[, Boolean, Point]) -> Number
-		bounds = L.latLngBounds(bounds);
+		bounds = F.Leaflet.latLngBounds(bounds);
 
 		var zoom = this.getMinZoom() - (inside ? 1 : 0),
 		    maxZoom = this.getMaxZoom(),
@@ -288,7 +288,7 @@ L.Map = L.Evented.extend({
 		    zoomNotFound = true,
 		    boundsSize;
 
-		padding = L.point(padding || [0, 0]);
+		padding = F.Leaflet.point(padding || [0, 0]);
 
 		do {
 			zoom++;
@@ -306,7 +306,7 @@ L.Map = L.Evented.extend({
 
 	getSize: function () {
 		if (!this._size || this._sizeChanged) {
-			this._size = new L.Point(
+			this._size = new F.Leaflet.Point(
 				this._container.clientWidth,
 				this._container.clientHeight);
 
@@ -317,7 +317,7 @@ L.Map = L.Evented.extend({
 
 	getPixelBounds: function () {
 		var topLeftPoint = this._getTopLeftPoint();
-		return new L.Bounds(topLeftPoint, topLeftPoint.add(this.getSize()));
+		return new F.Leaflet.Bounds(topLeftPoint, topLeftPoint.add(this.getSize()));
 	},
 
 	getPixelOrigin: function () {
@@ -358,51 +358,51 @@ L.Map = L.Evented.extend({
 
 	project: function (latlng, zoom) { // (LatLng[, Number]) -> Point
 		zoom = zoom === undefined ? this._zoom : zoom;
-		return this.options.crs.latLngToPoint(L.latLng(latlng), zoom);
+		return this.options.crs.latLngToPoint(F.Leaflet.latLng(latlng), zoom);
 	},
 
 	unproject: function (point, zoom) { // (Point[, Number]) -> LatLng
 		zoom = zoom === undefined ? this._zoom : zoom;
-		return this.options.crs.pointToLatLng(L.point(point), zoom);
+		return this.options.crs.pointToLatLng(F.Leaflet.point(point), zoom);
 	},
 
 	layerPointToLatLng: function (point) { // (Point)
-		var projectedPoint = L.point(point).add(this.getPixelOrigin());
+		var projectedPoint = F.Leaflet.point(point).add(this.getPixelOrigin());
 		return this.unproject(projectedPoint);
 	},
 
 	latLngToLayerPoint: function (latlng) { // (LatLng)
-		var projectedPoint = this.project(L.latLng(latlng))._round();
+		var projectedPoint = this.project(F.Leaflet.latLng(latlng))._round();
 		return projectedPoint._subtract(this.getPixelOrigin());
 	},
 
 	wrapLatLng: function (latlng) {
-		return this.options.crs.wrapLatLng(L.latLng(latlng));
+		return this.options.crs.wrapLatLng(F.Leaflet.latLng(latlng));
 	},
 
 	distance: function (latlng1, latlng2) {
-		return this.options.crs.distance(L.latLng(latlng1), L.latLng(latlng2));
+		return this.options.crs.distance(F.Leaflet.latLng(latlng1), F.Leaflet.latLng(latlng2));
 	},
 
 	containerPointToLayerPoint: function (point) { // (Point)
-		return L.point(point).subtract(this._getMapPanePos());
+		return F.Leaflet.point(point).subtract(this._getMapPanePos());
 	},
 
 	layerPointToContainerPoint: function (point) { // (Point)
-		return L.point(point).add(this._getMapPanePos());
+		return F.Leaflet.point(point).add(this._getMapPanePos());
 	},
 
 	containerPointToLatLng: function (point) {
-		var layerPoint = this.containerPointToLayerPoint(L.point(point));
+		var layerPoint = this.containerPointToLayerPoint(F.Leaflet.point(point));
 		return this.layerPointToLatLng(layerPoint);
 	},
 
 	latLngToContainerPoint: function (latlng) {
-		return this.layerPointToContainerPoint(this.latLngToLayerPoint(L.latLng(latlng)));
+		return this.layerPointToContainerPoint(this.latLngToLayerPoint(F.Leaflet.latLng(latlng)));
 	},
 
 	mouseEventToContainerPoint: function (e) { // (MouseEvent)
-		return L.DomEvent.getMousePosition(e, this._container);
+		return F.DomEvent.getMousePosition(e, this._container);
 	},
 
 	mouseEventToLayerPoint: function (e) { // (MouseEvent)
@@ -417,7 +417,7 @@ L.Map = L.Evented.extend({
 	// map initialization methods
 
 	_initContainer: function (id) {
-		var container = this._container = L.DomUtil.get(id);
+		var container = this._container = F.DomUtil.get(id);
 
 		if (!container) {
 			throw new Error('Map container not found.');
@@ -431,16 +431,16 @@ L.Map = L.Evented.extend({
 	_initLayout: function () {
 		var container = this._container;
 
-		this._fadeAnimated = this.options.fadeAnimation && L.Browser.any3d;
+		this._fadeAnimated = this.options.fadeAnimation && F.Browser.any3d;
 
-		L.DomUtil.addClass(container, 'leaflet-container' +
-			(L.Browser.touch ? ' leaflet-touch' : '') +
-			(L.Browser.retina ? ' leaflet-retina' : '') +
-			(L.Browser.ielt9 ? ' leaflet-oldie' : '') +
-			(L.Browser.safari ? ' leaflet-safari' : '') +
-			(this._fadeAnimated ? ' leaflet-fade-anim' : ''));
+		F.DomUtil.addClass(container, 'container' +
+			(F.Browser.touch ? ' touch' : '') +
+			(F.Browser.retina ? ' retina' : '') +
+			(F.Browser.ielt9 ? ' oldie' : '') +
+			(F.Browser.safari ? ' safari' : '') +
+			(this._fadeAnimated ? ' fade-anim' : ''));
 
-		var position = L.DomUtil.getStyle(container, 'position');
+		var position = F.DomUtil.getStyle(container, 'position');
 
 		if (position !== 'absolute' && position !== 'relative' && position !== 'fixed') {
 			container.style.position = 'relative';
@@ -465,8 +465,8 @@ L.Map = L.Evented.extend({
 		this.createPane('popupPane');
 
 		if (!this.options.markerZoomAnimation) {
-			L.DomUtil.addClass(panes.markerPane, 'leaflet-zoom-hide');
-			L.DomUtil.addClass(panes.shadowPane, 'leaflet-zoom-hide');
+			F.DomUtil.addClass(panes.markerPane, 'zoom-hide');
+			F.DomUtil.addClass(panes.shadowPane, 'zoom-hide');
 		}
 	},
 
@@ -491,7 +491,7 @@ L.Map = L.Evented.extend({
 		this._initialTopLeftPoint = this._getNewTopLeftPoint(center);
 
 		if (!preserveMapOffset) {
-			L.DomUtil.setPosition(this._mapPane, new L.Point(0, 0));
+			F.DomUtil.setPosition(this._mapPane, new F.Leaflet.Point(0, 0));
 		} else {
 			this._initialTopLeftPoint._add(this._getMapPanePos());
 		}
@@ -515,7 +515,7 @@ L.Map = L.Evented.extend({
 	},
 
 	_rawPanBy: function (offset) {
-		L.DomUtil.setPosition(this._mapPane, this._getMapPanePos().subtract(offset));
+		F.DomUtil.setPosition(this._mapPane, this._getMapPanePos().subtract(offset));
 	},
 
 	_getZoomSpan: function () {
@@ -535,22 +535,22 @@ L.Map = L.Evented.extend({
 	// map events
 
 	_initEvents: function (onOff) {
-		if (!L.DomEvent) { return; }
+		if (!F.DomEvent) { return; }
 
 		onOff = onOff || 'on';
 
-		L.DomEvent[onOff](this._container,
+		F.DomEvent[onOff](this._container,
 			'click dblclick mousedown mouseup mouseenter mouseleave mousemove contextmenu',
 			this._handleMouseEvent, this);
 
 		if (this.options.trackResize) {
-			L.DomEvent[onOff](window, 'resize', this._onResize, this);
+			F.DomEvent[onOff](window, 'resize', this._onResize, this);
 		}
 	},
 
 	_onResize: function () {
-		L.Util.cancelAnimFrame(this._resizeRequest);
-		this._resizeRequest = L.Util.requestAnimFrame(
+		F.Util.cancelAnimFrame(this._resizeRequest);
+		this._resizeRequest = F.Util.requestAnimFrame(
 		        function () { this.invalidateSize({debounceMoveend: true}); }, this, false, this._container);
 	},
 
@@ -565,7 +565,7 @@ L.Map = L.Evented.extend({
 	_fireMouseEvent: function (obj, e, type, propagate, latlng) {
 		type = type || e.type;
 
-		if (L.DomEvent._skipped(e)) { return; }
+		if (F.DomEvent._skipped(e)) { return; }
 
 		if (type === 'click') {
 			if (!e._simulated && ((this.dragging && this.dragging.moved()) ||
@@ -576,10 +576,10 @@ L.Map = L.Evented.extend({
 		if (!obj.listens(type, propagate)) { return; }
 
 		if (type === 'contextmenu') {
-			L.DomEvent.preventDefault(e);
+			F.DomEvent.preventDefault(e);
 		}
 		if (type === 'click' || type === 'dblclick' || type === 'contextmenu') {
-			L.DomEvent.stopPropagation(e);
+			F.DomEvent.stopPropagation(e);
 		}
 
 		var data = {
@@ -612,7 +612,7 @@ L.Map = L.Evented.extend({
 	// private methods for getting map state
 
 	_getMapPanePos: function () {
-		return L.DomUtil.getPosition(this._mapPane);
+		return F.DomUtil.getPosition(this._mapPane);
 	},
 
 	_moved: function () {
@@ -652,7 +652,7 @@ L.Map = L.Evented.extend({
 
 		var centerPoint = this.project(center, zoom),
 		    viewHalf = this.getSize().divideBy(2),
-		    viewBounds = new L.Bounds(centerPoint.subtract(viewHalf), centerPoint.add(viewHalf)),
+		    viewBounds = new F.Leaflet.Bounds(centerPoint.subtract(viewHalf), centerPoint.add(viewHalf)),
 		    offset = this._getBoundsOffset(viewBounds, bounds, zoom);
 
 		return this.unproject(centerPoint.add(offset), zoom);
@@ -663,7 +663,7 @@ L.Map = L.Evented.extend({
 		if (!bounds) { return offset; }
 
 		var viewBounds = this.getPixelBounds(),
-		    newBounds = new L.Bounds(viewBounds.min.add(offset), viewBounds.max.add(offset));
+		    newBounds = new F.Leaflet.Bounds(viewBounds.min.add(offset), viewBounds.max.add(offset));
 
 		return offset.add(this._getBoundsOffset(newBounds, bounds));
 	},
@@ -676,7 +676,7 @@ L.Map = L.Evented.extend({
 		    dx = this._rebound(nwOffset.x, -seOffset.x),
 		    dy = this._rebound(nwOffset.y, -seOffset.y);
 
-		return new L.Point(dx, dy);
+		return new F.Leaflet.Point(dx, dy);
 	},
 
 	_rebound: function (left, right) {
@@ -693,6 +693,6 @@ L.Map = L.Evented.extend({
 	}
 });
 
-L.map = function (id, options) {
-	return new L.Map(id, options);
+F.Leaflet.map = function (id, options) {
+	return new F.Leaflet.Map(id, options);
 };

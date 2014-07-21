@@ -1,11 +1,11 @@
 /*
- * L.LineUtil contains different utility functions for line segments
+ * F.Leaflet.LineUtil contains different utility functions for line segments
  * and polylines (clipping, simplification, distances, etc.)
  */
 
 /*jshint bitwise:false */ // allow bitwise operations for this file
 
-L.LineUtil = {
+F.Leaflet.LineUtil = {
 
 	// Simplify polyline with vertex reduction and Douglas-Peucker simplification.
 	// Improves rendering performance dramatically by lessening the number of points to draw.
@@ -156,7 +156,7 @@ L.LineUtil = {
 			y = a.y + dy * (min.x - a.x) / dx;
 		}
 
-		return new L.Point(x, y, true);
+		return new F.Leaflet.Point(x, y, true);
 	},
 
 	_getBitCode: function (/*Point*/ p, bounds) {
@@ -208,6 +208,6 @@ L.LineUtil = {
 		dx = p.x - x;
 		dy = p.y - y;
 
-		return sqDist ? dx * dx + dy * dy : new L.Point(x, y);
+		return sqDist ? dx * dx + dy * dy : new F.Leaflet.Point(x, y);
 	}
 };

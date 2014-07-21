@@ -1,8 +1,8 @@
 /*
- * L.GridLayer is used as base class for grid-like layers like TileLayer.
+ * F.Leaflet.GridLayer is used as base class for grid-like layers like TileLayer.
  */
 
-L.GridLayer = L.Layer.extend({
+F.Leaflet.GridLayer = F.Leaflet.Layer.extend({
 
 	options: {
 		pane: 'tilePane',
@@ -10,8 +10,8 @@ L.GridLayer = L.Layer.extend({
 		tileSize: 256,
 		opacity: 1,
 
-		unloadInvisibleTiles: L.Browser.mobile,
-		updateWhenIdle: L.Browser.mobile,
+		unloadInvisibleTiles: F.Browser.mobile,
+		updateWhenIdle: F.Browser.mobile,
 		updateInterval: 150
 
 		/*
@@ -24,7 +24,7 @@ L.GridLayer = L.Layer.extend({
 	},
 
 	initialize: function (options) {
-		options = L.setOptions(this, options);
+		options = F.Leaflet.setOptions(this, options);
 	},
 
 	onAdd: function () {
@@ -32,7 +32,7 @@ L.GridLayer = L.Layer.extend({
 
 		if (!this.options.updateWhenIdle) {
 			// update tiles on move, but not more often than once per given interval
-			this._update = L.Util.throttle(this._update, this.options.updateInterval, this);
+			this._update = F.Util.throttle(this._update, this.options.updateInterval, this);
 		}
 
 		this._reset();
@@ -45,7 +45,7 @@ L.GridLayer = L.Layer.extend({
 
 	onRemove: function (map) {
 		this._clearBgBuffer();
-		L.DomUtil.remove(this._container);
+		F.DomUtil.remove(this._container);
 
 		map._removeZoomLimit(this);
 
@@ -54,7 +54,7 @@ L.GridLayer = L.Layer.extend({
 
 	bringToFront: function () {
 		if (this._map) {
-			L.DomUtil.toFront(this._container);
+			F.DomUtil.toFront(this._container);
 			this._setAutoZIndex(Math.max);
 		}
 		return this;
@@ -62,7 +62,7 @@ L.GridLayer = L.Layer.extend({
 
 	bringToBack: function () {
 		if (this._map) {
-			L.DomUtil.toBack(this._container);
+			F.DomUtil.toBack(this._container);
 			this._setAutoZIndex(Math.min);
 		}
 		return this;
@@ -149,29 +149,29 @@ L.GridLayer = L.Layer.extend({
 	_updateOpacity: function () {
 		var opacity = this.options.opacity;
 
-		if (L.Browser.ielt9) {
+		if (F.Browser.ielt9) {
 			// IE doesn't inherit filter opacity properly, so we're forced to set it on tiles
 			for (var i in this._tiles) {
-				L.DomUtil.setOpacity(this._tiles[i], opacity);
+				F.DomUtil.setOpacity(this._tiles[i], opacity);
 			}
 		} else {
-			L.DomUtil.setOpacity(this._container, opacity);
+			F.DomUtil.setOpacity(this._container, opacity);
 		}
 	},
 
 	_initContainer: function () {
 		if (this._container) { return; }
 
-		this._container = L.DomUtil.create('div', 'leaflet-layer');
+		this._container = F.DomUtil.create('div', 'layer');
 		this._updateZIndex();
 
 		if (this._zoomAnimated) {
-			var className = 'leaflet-tile-container leaflet-zoom-animated';
+			var className = 'tile-container zoom-animated';
 
-			this._bgBuffer = L.DomUtil.create('div', className, this._container);
-			this._tileContainer = L.DomUtil.create('div', className, this._container);
+			this._bgBuffer = F.DomUtil.create('div', className, this._container);
+			this._tileContainer = F.DomUtil.create('div', className, this._container);
 
-			L.DomUtil.setTransform(this._tileContainer);
+			F.DomUtil.setTransform(this._tileContainer);
 
 		} else {
 			this._tileContainer = this._container;
@@ -199,7 +199,7 @@ L.GridLayer = L.Layer.extend({
 		this._tilesToLoad = 0;
 		this._tilesTotal = 0;
 
-		L.DomUtil.empty(this._tileContainer);
+		F.DomUtil.empty(this._tileContainer);
 
 		if (this._zoomAnimated && e && e.hard) {
 			this._clearBgBuffer();
@@ -248,7 +248,7 @@ L.GridLayer = L.Layer.extend({
 		    zoom < this.options.minZoom) { return; }
 
 		// tile coordinates range for the current view
-		var tileBounds = L.bounds(
+		var tileBounds = F.Leaflet.bounds(
 			bounds.min.divideBy(tileSize).floor(),
 			bounds.max.divideBy(tileSize).floor());
 
@@ -270,7 +270,7 @@ L.GridLayer = L.Layer.extend({
 		for (j = bounds.min.y; j <= bounds.max.y; j++) {
 			for (i = bounds.min.x; i <= bounds.max.x; i++) {
 
-				coords = new L.Point(i, j);
+				coords = new F.Leaflet.Point(i, j);
 				coords.z = zoom;
 
 				// add tile to queue if it's not in cache or out of bounds
@@ -321,7 +321,7 @@ L.GridLayer = L.Layer.extend({
 
 		// don't load tile if it doesn't intersect the bounds in options
 		var tileBounds = this._tileCoordsToBounds(coords);
-		return L.latLngBounds(this.options.bounds).intersects(tileBounds);
+		return F.Leaflet.latLngBounds(this.options.bounds).intersects(tileBounds);
 	},
 
 	// converts tile coordinates to its geographical bounds
@@ -336,7 +336,7 @@ L.GridLayer = L.Layer.extend({
 		    nw = map.wrapLatLng(map.unproject(nwPoint, coords.z)),
 		    se = map.wrapLatLng(map.unproject(sePoint, coords.z));
 
-		return new L.LatLngBounds(nw, se);
+		return new F.Leaflet.LatLngBounds(nw, se);
 	},
 
 	// converts tile coordinates to key for the tile cache
@@ -350,7 +350,7 @@ L.GridLayer = L.Layer.extend({
 		    x = parseInt(kArr[0], 10),
 		    y = parseInt(kArr[1], 10);
 
-		return new L.Point(x, y);
+		return new F.Leaflet.Point(x, y);
 	},
 
 	// remove any present tiles that are off the specified bounds
@@ -365,7 +365,7 @@ L.GridLayer = L.Layer.extend({
 	_removeTile: function (key) {
 		var tile = this._tiles[key];
 
-		L.DomUtil.remove(tile);
+		F.DomUtil.remove(tile);
 
 		delete this._tiles[key];
 
@@ -375,22 +375,22 @@ L.GridLayer = L.Layer.extend({
 	_initTile: function (tile) {
 		var size = this._getTileSize();
 
-		L.DomUtil.addClass(tile, 'leaflet-tile');
+		F.DomUtil.addClass(tile, 'tile');
 
 		tile.style.width = size + 'px';
 		tile.style.height = size + 'px';
 
-		tile.onselectstart = L.Util.falseFn;
-		tile.onmousemove = L.Util.falseFn;
+		tile.onselectstart = F.Util.falseFn;
+		tile.onmousemove = F.Util.falseFn;
 
 		// update opacity on tiles in IE7-8 because of filter inheritance problems
-		if (L.Browser.ielt9 && this.options.opacity < 1) {
-			L.DomUtil.setOpacity(tile, this.options.opacity);
+		if (F.Browser.ielt9 && this.options.opacity < 1) {
+			F.DomUtil.setOpacity(tile, this.options.opacity);
 		}
 
 		// without this hack, tiles disappear after zoom on Chrome for Android
 		// https://github.com/Leaflet/Leaflet/issues/2078
-		if (L.Browser.android && !L.Browser.android23) {
+		if (F.Browser.android && !F.Browser.android23) {
 			tile.style.WebkitBackfaceVisibility = 'hidden';
 		}
 	},
@@ -401,7 +401,7 @@ L.GridLayer = L.Layer.extend({
 		// wrap tile coords if necessary (depending on CRS)
 		this._wrapCoords(coords);
 
-		var tile = this.createTile(coords, L.bind(this._tileReady, this));
+		var tile = this.createTile(coords, F.bind(this._tileReady, this));
 
 		this._initTile(tile);
 
@@ -409,12 +409,12 @@ L.GridLayer = L.Layer.extend({
 		// we know that tile is async and will be ready later; otherwise
 		if (this.createTile.length < 2) {
 			// mark tile as ready, but delay one frame for opacity animation to happen
-			setTimeout(L.bind(this._tileReady, this, null, tile), 0);
+			setTimeout(F.bind(this._tileReady, this, null, tile), 0);
 		}
 
 		// we prefer top/left over translate3d so that we don't create a HW-accelerated layer from each tile
 		// which is slow, and it also fixes gaps between tiles in Safari
-		L.DomUtil.setPosition(tile, tilePos, true);
+		F.DomUtil.setPosition(tile, tilePos, true);
 
 		// save tile in cache
 		this._tiles[this._tileCoordsToKey(coords)] = tile;
@@ -431,7 +431,7 @@ L.GridLayer = L.Layer.extend({
 			});
 		}
 
-		L.DomUtil.addClass(tile, 'leaflet-tile-loaded');
+		F.DomUtil.addClass(tile, 'tile-loaded');
 
 		this.fire('tileload', {tile: tile});
 
@@ -448,7 +448,7 @@ L.GridLayer = L.Layer.extend({
 		if (this._zoomAnimated) {
 			// clear scaled tiles after all new tiles are loaded (for performance)
 			clearTimeout(this._clearBgBufferTimer);
-			this._clearBgBufferTimer = setTimeout(L.bind(this._clearBgBuffer, this), 300);
+			this._clearBgBufferTimer = setTimeout(F.bind(this._clearBgBuffer, this), 300);
 		}
 	},
 
@@ -459,8 +459,8 @@ L.GridLayer = L.Layer.extend({
 	},
 
 	_wrapCoords: function (coords) {
-		coords.x = this._wrapLng ? L.Util.wrapNum(coords.x, this._wrapLng) : coords.x;
-		coords.y = this._wrapLat ? L.Util.wrapNum(coords.y, this._wrapLat) : coords.y;
+		coords.x = this._wrapLng ? F.Util.wrapNum(coords.x, this._wrapLng) : coords.x;
+		coords.y = this._wrapLat ? F.Util.wrapNum(coords.y, this._wrapLat) : coords.y;
 	},
 
 	// get the global tile coordinates range for the current zoom
@@ -468,14 +468,14 @@ L.GridLayer = L.Layer.extend({
 		var bounds = this._map.getPixelWorldBounds(),
 			size = this._getTileSize();
 
-		return bounds ? L.bounds(
+		return bounds ? F.Leaflet.bounds(
 				bounds.min.divideBy(size).floor(),
 				bounds.max.divideBy(size).ceil().subtract([1, 1])) : null;
 	},
 
 	_startZoomAnim: function () {
 		this._prepareBgBuffer();
-		this._prevTranslate = this._translate || new L.Point(0, 0);
+		this._prevTranslate = this._translate || new F.Leaflet.Point(0, 0);
 		this._prevScale = this._scale;
 	},
 
@@ -484,13 +484,13 @@ L.GridLayer = L.Layer.extend({
 		this._translate = this._prevTranslate.multiplyBy(e.scale).add(e.origin.multiplyBy(1 - e.scale));
 		this._scale = this._prevScale * e.scale;
 
-		L.DomUtil.setTransform(this._bgBuffer, this._translate, this._scale);
+		F.DomUtil.setTransform(this._bgBuffer, this._translate, this._scale);
 	},
 
 	_endZoomAnim: function () {
 		var front = this._tileContainer;
 		front.style.visibility = '';
-		L.DomUtil.toFront(front); // bring to front
+		F.DomUtil.toFront(front); // bring to front
 	},
 
 	_clearBgBuffer: function () {
@@ -498,8 +498,8 @@ L.GridLayer = L.Layer.extend({
 			bg = this._bgBuffer;
 
 		if (map && !map._animatingZoom && !map.touchZoom._zooming && bg) {
-			L.DomUtil.empty(bg);
-			L.DomUtil.setTransform(bg);
+			F.DomUtil.empty(bg);
+			F.DomUtil.setTransform(bg);
 		}
 	},
 
@@ -521,14 +521,14 @@ L.GridLayer = L.Layer.extend({
 
 		// prepare the buffer to become the front tile pane
 		bg.style.visibility = 'hidden';
-		L.DomUtil.setTransform(bg);
+		F.DomUtil.setTransform(bg);
 
 		// switch out the current layer to be the new bg layer (and vice-versa)
 		this._tileContainer = bg;
 		this._bgBuffer = front;
 
 		// reset bg layer transform info
-		this._translate = new L.Point(0, 0);
+		this._translate = new F.Leaflet.Point(0, 0);
 		this._scale = 1;
 
 		// prevent bg buffer from clearing right after zoom
@@ -536,6 +536,6 @@ L.GridLayer = L.Layer.extend({
 	}
 });
 
-L.gridLayer = function (options) {
-	return new L.GridLayer(options);
+F.Leaflet.gridLayer = function (options) {
+	return new F.Leaflet.GridLayer(options);
 };

@@ -1,10 +1,10 @@
 /*
- * L.Rectangle extends Polygon and creates a rectangle when passed a LatLngBounds object.
+ * F.Leaflet.Rectangle extends Polygon and creates a rectangle when passed a LatLngBounds object.
  */
 
-L.Rectangle = L.Polygon.extend({
+F.Leaflet.Rectangle = F.Leaflet.Polygon.extend({
 	initialize: function (latLngBounds, options) {
-		L.Polygon.prototype.initialize.call(this, this._boundsToLatLngs(latLngBounds), options);
+		F.Leaflet.Polygon.prototype.initialize.call(this, this._boundsToLatLngs(latLngBounds), options);
 	},
 
 	setBounds: function (latLngBounds) {
@@ -12,7 +12,7 @@ L.Rectangle = L.Polygon.extend({
 	},
 
 	_boundsToLatLngs: function (latLngBounds) {
-		latLngBounds = L.latLngBounds(latLngBounds);
+		latLngBounds = F.Leaflet.latLngBounds(latLngBounds);
 		return [
 			latLngBounds.getSouthWest(),
 			latLngBounds.getNorthWest(),
@@ -22,6 +22,6 @@ L.Rectangle = L.Polygon.extend({
 	}
 });
 
-L.rectangle = function (latLngBounds, options) {
-	return new L.Rectangle(latLngBounds, options);
+F.Leaflet.rectangle = function (latLngBounds, options) {
+	return new F.Leaflet.Rectangle(latLngBounds, options);
 };

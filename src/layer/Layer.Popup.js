@@ -2,16 +2,16 @@
  * Adds popup-related methods to all layers.
  */
 
-L.Layer.include({
+F.Leaflet.Layer.include({
 
 	bindPopup: function (content, options) {
 
-		if (content instanceof L.Popup) {
+		if (content instanceof F.Leaflet.Popup) {
 			this._popup = content;
 			content._source = this;
 		} else {
 			if (!this._popup || options) {
-				this._popup = new L.Popup(options, this);
+				this._popup = new F.Leaflet.Popup(options, this);
 			}
 			this._popup.setContent(content);
 		}

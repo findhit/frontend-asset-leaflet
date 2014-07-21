@@ -1,8 +1,8 @@
 /*
- * L.TileLayer.WMS is used for WMS tile layers.
+ * F.Leaflet.TileLayer.WMS is used for WMS tile layers.
  */
 
-L.TileLayer.WMS = L.TileLayer.extend({
+F.Leaflet.TileLayer.WMS = F.Leaflet.TileLayer.extend({
 
 	defaultWmsParams: {
 		service: 'WMS',
@@ -18,7 +18,7 @@ L.TileLayer.WMS = L.TileLayer.extend({
 
 		this._url = url;
 
-		var wmsParams = L.extend({}, this.defaultWmsParams);
+		var wmsParams = F.Leaflet.extend({}, this.defaultWmsParams);
 
 		// all keys that are not TileLayer options go to WMS params
 		for (var i in options) {
@@ -27,10 +27,10 @@ L.TileLayer.WMS = L.TileLayer.extend({
 			}
 		}
 
-		options = L.setOptions(this, options);
+		options = F.Leaflet.setOptions(this, options);
 
 		wmsParams.width = wmsParams.height =
-				options.tileSize * (options.detectRetina && L.Browser.retina ? 2 : 1);
+				options.tileSize * (options.detectRetina && F.Browser.retina ? 2 : 1);
 
 		this.wmsParams = wmsParams;
 	},
@@ -44,7 +44,7 @@ L.TileLayer.WMS = L.TileLayer.extend({
 		var projectionKey = this._wmsVersion >= 1.3 ? 'crs' : 'srs';
 		this.wmsParams[projectionKey] = this._crs.code;
 
-		L.TileLayer.prototype.onAdd.call(this, map);
+		F.Leaflet.TileLayer.prototype.onAdd.call(this, map);
 	},
 
 	getTileUrl: function (coords) {
@@ -53,18 +53,18 @@ L.TileLayer.WMS = L.TileLayer.extend({
 		    nw = this._crs.project(tileBounds.getNorthWest()),
 		    se = this._crs.project(tileBounds.getSouthEast()),
 
-		    bbox = (this._wmsVersion >= 1.3 && this._crs === L.CRS.EPSG4326 ?
+		    bbox = (this._wmsVersion >= 1.3 && this._crs === F.Leaflet.CRS.EPSG4326 ?
 			    [se.y, nw.x, nw.y, se.x] :
 			    [nw.x, se.y, se.x, nw.y]).join(','),
 
-		    url = L.TileLayer.prototype.getTileUrl.call(this, coords);
+		    url = F.Leaflet.TileLayer.prototype.getTileUrl.call(this, coords);
 
-		return url + L.Util.getParamString(this.wmsParams, url, true) + '&BBOX=' + bbox;
+		return url + F.Util.getParamString(this.wmsParams, url, true) + '&BBOX=' + bbox;
 	},
 
 	setParams: function (params, noRedraw) {
 
-		L.extend(this.wmsParams, params);
+		F.Leaflet.extend(this.wmsParams, params);
 
 		if (!noRedraw) {
 			this.redraw();
@@ -74,6 +74,6 @@ L.TileLayer.WMS = L.TileLayer.extend({
 	}
 });
 
-L.tileLayer.wms = function (url, options) {
-	return new L.TileLayer.WMS(url, options);
+F.Leaflet.tileLayer.wms = function (url, options) {
+	return new F.Leaflet.TileLayer.WMS(url, options);
 };

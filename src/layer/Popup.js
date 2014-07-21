@@ -1,12 +1,12 @@
 /*
- * L.Popup is used for displaying popups on the map.
+ * F.Leaflet.Popup is used for displaying popups on the map.
  */
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	closePopupOnClick: true
 });
 
-L.Popup = L.Layer.extend({
+F.Leaflet.Popup = F.Leaflet.Layer.extend({
 
 	options: {
 		pane: 'popupPane',
@@ -28,7 +28,7 @@ L.Popup = L.Layer.extend({
 	},
 
 	initialize: function (options, source) {
-		L.setOptions(this, options);
+		F.Leaflet.setOptions(this, options);
 
 		this._source = source;
 	},
@@ -41,7 +41,7 @@ L.Popup = L.Layer.extend({
 		}
 
 		if (map._fadeAnimated) {
-			L.DomUtil.setOpacity(this._container, 0);
+			F.DomUtil.setOpacity(this._container, 0);
 		}
 
 		clearTimeout(this._removeTimeout);
@@ -49,7 +49,7 @@ L.Popup = L.Layer.extend({
 		this.update();
 
 		if (map._fadeAnimated) {
-			L.DomUtil.setOpacity(this._container, 1);
+			F.DomUtil.setOpacity(this._container, 1);
 		}
 
 		map.fire('popupopen', {popup: this});
@@ -66,10 +66,10 @@ L.Popup = L.Layer.extend({
 
 	onRemove: function (map) {
 		if (map._fadeAnimated) {
-			L.DomUtil.setOpacity(this._container, 0);
-			this._removeTimeout = setTimeout(L.bind(L.DomUtil.remove, L.DomUtil, this._container), 200);
+			F.DomUtil.setOpacity(this._container, 0);
+			this._removeTimeout = setTimeout(F.bind(F.DomUtil.remove, F.DomUtil, this._container), 200);
 		} else {
-			L.DomUtil.remove(this._container);
+			F.DomUtil.remove(this._container);
 		}
 
 		map.fire('popupclose', {popup: this});
@@ -84,7 +84,7 @@ L.Popup = L.Layer.extend({
 	},
 
 	setLatLng: function (latlng) {
-		this._latlng = L.latLng(latlng);
+		this._latlng = F.Leaflet.latLng(latlng);
 		if (this._map) {
 			this._updatePosition();
 			this._adjustPan();
@@ -143,29 +143,29 @@ L.Popup = L.Layer.extend({
 	},
 
 	_initLayout: function () {
-		var prefix = 'leaflet-popup',
-		    container = this._container = L.DomUtil.create('div',
+		var prefix = 'popup',
+		    container = this._container = F.DomUtil.create('div',
 			prefix + ' ' + (this.options.className || '') +
-			' leaflet-zoom-' + (this._zoomAnimated ? 'animated' : 'hide'));
+			' zoom-' + (this._zoomAnimated ? 'animated' : 'hide'));
 
 		if (this.options.closeButton) {
-			var closeButton = this._closeButton = L.DomUtil.create('a', prefix + '-close-button', container);
+			var closeButton = this._closeButton = F.DomUtil.create('a', prefix + '-close-button', container);
 			closeButton.href = '#close';
 			closeButton.innerHTML = '&#215;';
 
-			L.DomEvent.on(closeButton, 'click', this._onCloseButtonClick, this);
+			F.DomEvent.on(closeButton, 'click', this._onCloseButtonClick, this);
 		}
 
-		var wrapper = this._wrapper = L.DomUtil.create('div', prefix + '-content-wrapper', container);
-		this._contentNode = L.DomUtil.create('div', prefix + '-content', wrapper);
+		var wrapper = this._wrapper = F.DomUtil.create('div', prefix + '-content-wrapper', container);
+		this._contentNode = F.DomUtil.create('div', prefix + '-content', wrapper);
 
-		L.DomEvent
+		F.DomEvent
 			.disableClickPropagation(wrapper)
 			.disableScrollPropagation(this._contentNode)
-			.on(wrapper, 'contextmenu', L.DomEvent.stopPropagation);
+			.on(wrapper, 'contextmenu', F.DomEvent.stopPropagation);
 
-		this._tipContainer = L.DomUtil.create('div', prefix + '-tip-container', container);
-		this._tip = L.DomUtil.create('div', prefix + '-tip', this._tipContainer);
+		this._tipContainer = F.DomUtil.create('div', prefix + '-tip-container', container);
+		this._tip = F.DomUtil.create('div', prefix + '-tip', this._tipContainer);
 	},
 
 	_updateContent: function () {
@@ -202,13 +202,13 @@ L.Popup = L.Layer.extend({
 
 		var height = container.offsetHeight,
 		    maxHeight = this.options.maxHeight,
-		    scrolledClass = 'leaflet-popup-scrolled';
+		    scrolledClass = 'popup-scrolled';
 
 		if (maxHeight && height > maxHeight) {
 			style.height = maxHeight + 'px';
-			L.DomUtil.addClass(container, scrolledClass);
+			F.DomUtil.addClass(container, scrolledClass);
 		} else {
-			L.DomUtil.removeClass(container, scrolledClass);
+			F.DomUtil.removeClass(container, scrolledClass);
 		}
 
 		this._containerWidth = this._container.offsetWidth;
@@ -218,10 +218,10 @@ L.Popup = L.Layer.extend({
 		if (!this._map) { return; }
 
 		var pos = this._map.latLngToLayerPoint(this._latlng),
-		    offset = L.point(this.options.offset);
+		    offset = F.Leaflet.point(this.options.offset);
 
 		if (this._zoomAnimated) {
-			L.DomUtil.setPosition(this._container, pos);
+			F.DomUtil.setPosition(this._container, pos);
 		} else {
 			offset = offset.add(pos);
 		}
@@ -236,7 +236,7 @@ L.Popup = L.Layer.extend({
 
 	_animateZoom: function (e) {
 		var pos = this._map._latLngToNewLayerPoint(this._latlng, e.zoom, e.center);
-		L.DomUtil.setPosition(this._container, pos);
+		F.DomUtil.setPosition(this._container, pos);
 	},
 
 	_adjustPan: function () {
@@ -245,16 +245,16 @@ L.Popup = L.Layer.extend({
 		var map = this._map,
 		    containerHeight = this._container.offsetHeight,
 		    containerWidth = this._containerWidth,
-		    layerPos = new L.Point(this._containerLeft, -containerHeight - this._containerBottom);
+		    layerPos = new F.Leaflet.Point(this._containerLeft, -containerHeight - this._containerBottom);
 
 		if (this._zoomAnimated) {
-			layerPos._add(L.DomUtil.getPosition(this._container));
+			layerPos._add(F.DomUtil.getPosition(this._container));
 		}
 
 		var containerPos = map.layerPointToContainerPoint(layerPos),
-		    padding = L.point(this.options.autoPanPadding),
-		    paddingTL = L.point(this.options.autoPanPaddingTopLeft || padding),
-		    paddingBR = L.point(this.options.autoPanPaddingBottomRight || padding),
+		    padding = F.Leaflet.point(this.options.autoPanPadding),
+		    paddingTL = F.Leaflet.point(this.options.autoPanPaddingTopLeft || padding),
+		    paddingBR = F.Leaflet.point(this.options.autoPanPaddingBottomRight || padding),
 		    size = map.getSize(),
 		    dx = 0,
 		    dy = 0;
@@ -281,21 +281,21 @@ L.Popup = L.Layer.extend({
 
 	_onCloseButtonClick: function (e) {
 		this._close();
-		L.DomEvent.stop(e);
+		F.DomEvent.stop(e);
 	}
 });
 
-L.popup = function (options, source) {
-	return new L.Popup(options, source);
+F.Leaflet.popup = function (options, source) {
+	return new F.Leaflet.Popup(options, source);
 };
 
 
-L.Map.include({
+F.Leaflet.Map.include({
 	openPopup: function (popup, latlng, options) { // (Popup) or (String || HTMLElement, LatLng[, Object])
-		if (!(popup instanceof L.Popup)) {
+		if (!(popup instanceof F.Leaflet.Popup)) {
 			var content = popup;
 
-			popup = new L.Popup(options).setContent(content);
+			popup = new F.Leaflet.Popup(options).setContent(content);
 		}
 
 		if (latlng) {

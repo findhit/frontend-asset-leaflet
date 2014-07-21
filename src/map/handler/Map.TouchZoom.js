@@ -1,19 +1,19 @@
 /*
- * L.Handler.TouchZoom is used by L.Map to add pinch zoom on supported mobile browsers.
+ * F.Leaflet.Handler.TouchZoom is used by F.Leaflet.Map to add pinch zoom on supported mobile browsers.
  */
 
-L.Map.mergeOptions({
-	touchZoom: L.Browser.touch && !L.Browser.android23,
+F.Leaflet.Map.mergeOptions({
+	touchZoom: F.Browser.touch && !F.Browser.android23,
 	bounceAtZoomLimits: true
 });
 
-L.Map.TouchZoom = L.Handler.extend({
+F.Leaflet.Map.TouchZoom = F.Leaflet.Handler.extend({
 	addHooks: function () {
-		L.DomEvent.on(this._map._container, 'touchstart', this._onTouchStart, this);
+		F.DomEvent.on(this._map._container, 'touchstart', this._onTouchStart, this);
 	},
 
 	removeHooks: function () {
-		L.DomEvent.off(this._map._container, 'touchstart', this._onTouchStart, this);
+		F.DomEvent.off(this._map._container, 'touchstart', this._onTouchStart, this);
 	},
 
 	_onTouchStart: function (e) {
@@ -37,11 +37,11 @@ L.Map.TouchZoom = L.Handler.extend({
 			map._panAnim.stop();
 		}
 
-		L.DomEvent
+		F.DomEvent
 		    .on(document, 'touchmove', this._onTouchMove, this)
 		    .on(document, 'touchend', this._onTouchEnd, this);
 
-		L.DomEvent.preventDefault(e);
+		F.DomEvent.preventDefault(e);
 	},
 
 	_onTouchMove: function (e) {
@@ -66,10 +66,10 @@ L.Map.TouchZoom = L.Handler.extend({
 			this._moved = true;
 		}
 
-		L.Util.cancelAnimFrame(this._animRequest);
-		this._animRequest = L.Util.requestAnimFrame(this._updateOnMove, this, true, this._map._container);
+		F.Util.cancelAnimFrame(this._animRequest);
+		this._animRequest = F.Util.requestAnimFrame(this._updateOnMove, this, true, this._map._container);
 
-		L.DomEvent.preventDefault(e);
+		F.DomEvent.preventDefault(e);
 	},
 
 	_updateOnMove: function () {
@@ -92,9 +92,9 @@ L.Map.TouchZoom = L.Handler.extend({
 		}
 
 		this._zooming = false;
-		L.Util.cancelAnimFrame(this._animRequest);
+		F.Util.cancelAnimFrame(this._animRequest);
 
-		L.DomEvent
+		F.DomEvent
 		    .off(document, 'touchmove', this._onTouchMove)
 		    .off(document, 'touchend', this._onTouchEnd);
 
@@ -112,4 +112,4 @@ L.Map.TouchZoom = L.Handler.extend({
 	}
 });
 
-L.Map.addInitHook('addHandler', 'touchZoom', L.Map.TouchZoom);
+F.Leaflet.Map.addInitHook('addHandler', 'touchZoom', F.Leaflet.Map.TouchZoom);

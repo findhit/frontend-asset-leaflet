@@ -1,16 +1,16 @@
 /*
- * Popup extension to L.Marker, adding popup-related methods.
+ * Popup extension to F.Leaflet.Marker, adding popup-related methods.
  */
 
-L.Marker.include({
+F.Leaflet.Marker.include({
 	bindPopup: function (content, options) {
-		var anchor = L.point(this.options.icon.options.popupAnchor || [0, 0])
-			.add(L.Popup.prototype.options.offset);
+		var anchor = F.Leaflet.point(this.options.icon.options.popupAnchor || [0, 0])
+			.add(F.Leaflet.Popup.prototype.options.offset);
 
-		options = L.extend({offset: anchor}, options);
+		options = F.Leaflet.extend({offset: anchor}, options);
 
-		return L.Layer.prototype.bindPopup.call(this, content, options);
+		return F.Leaflet.Layer.prototype.bindPopup.call(this, content, options);
 	},
 
-	_openPopup: L.Layer.prototype.togglePopup
+	_openPopup: F.Leaflet.Layer.prototype.togglePopup
 });

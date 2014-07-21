@@ -1,9 +1,9 @@
 /*
- * L.Renderer is a base class for renderer implementations (SVG, Canvas);
+ * F.Leaflet.Renderer is a base class for renderer implementations (SVG, Canvas);
  * handles renderer container, bounds and zoom animation.
  */
 
-L.Renderer = L.Layer.extend({
+F.Leaflet.Renderer = F.Leaflet.Layer.extend({
 
 	options: {
 		// how much to extend the clip area around the map view (relative to its size)
@@ -12,8 +12,8 @@ L.Renderer = L.Layer.extend({
 	},
 
 	initialize: function (options) {
-		L.setOptions(this, options);
-		L.stamp(this);
+		F.Leaflet.setOptions(this, options);
+		F.stamp(this);
 	},
 
 	onAdd: function () {
@@ -21,7 +21,7 @@ L.Renderer = L.Layer.extend({
 			this._initContainer(); // defined by renderer implementations
 
 			if (this._zoomAnimated) {
-				L.DomUtil.addClass(this._container, 'leaflet-zoom-animated');
+				F.DomUtil.addClass(this._container, 'zoom-animated');
 			}
 		}
 
@@ -30,7 +30,7 @@ L.Renderer = L.Layer.extend({
 	},
 
 	onRemove: function () {
-		L.DomUtil.remove(this._container);
+		F.DomUtil.remove(this._container);
 	},
 
 	getEvents: function () {
@@ -47,7 +47,7 @@ L.Renderer = L.Layer.extend({
 		var origin = e.origin.subtract(this._map._getCenterLayerPoint()),
 		    offset = this._bounds.min.add(origin.multiplyBy(1 - e.scale));
 
-		L.DomUtil.setTransform(this._container, offset, e.scale);
+		F.DomUtil.setTransform(this._container, offset, e.scale);
 	},
 
 	_update: function () {
@@ -56,18 +56,18 @@ L.Renderer = L.Layer.extend({
 		    size = this._map.getSize(),
 		    min = this._map.containerPointToLayerPoint(size.multiplyBy(-p)).round();
 
-		this._bounds = new L.Bounds(min, min.add(size.multiplyBy(1 + p * 2)).round());
+		this._bounds = new F.Leaflet.Bounds(min, min.add(size.multiplyBy(1 + p * 2)).round());
 	}
 });
 
 
-L.Map.include({
+F.Leaflet.Map.include({
 	// used by each vector layer to decide which renderer to use
 	getRenderer: function (layer) {
 		var renderer = layer.options.renderer || this.options.renderer || this._renderer;
 
 		if (!renderer) {
-			renderer = this._renderer = (L.SVG && L.svg()) || (L.Canvas && L.canvas());
+			renderer = this._renderer = (F.Leaflet.SVG && F.Leaflet.svg()) || (F.Leaflet.Canvas && F.Leaflet.canvas());
 		}
 
 		if (!this.hasLayer(renderer)) {

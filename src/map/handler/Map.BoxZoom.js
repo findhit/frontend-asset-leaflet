@@ -1,13 +1,13 @@
 /*
- * L.Handler.ShiftDragZoom is used to add shift-drag zoom interaction to the map
+ * F.Leaflet.Handler.ShiftDragZoom is used to add shift-drag zoom interaction to the map
   * (zoom to a selected bounding box), enabled by default.
  */
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	boxZoom: true
 });
 
-L.Map.BoxZoom = L.Handler.extend({
+F.Leaflet.Map.BoxZoom = F.Leaflet.Handler.extend({
 	initialize: function (map) {
 		this._map = map;
 		this._container = map._container;
@@ -15,11 +15,11 @@ L.Map.BoxZoom = L.Handler.extend({
 	},
 
 	addHooks: function () {
-		L.DomEvent.on(this._container, 'mousedown', this._onMouseDown, this);
+		F.DomEvent.on(this._container, 'mousedown', this._onMouseDown, this);
 	},
 
 	removeHooks: function () {
-		L.DomEvent.off(this._container, 'mousedown', this._onMouseDown, this);
+		F.DomEvent.off(this._container, 'mousedown', this._onMouseDown, this);
 	},
 
 	moved: function () {
@@ -31,13 +31,13 @@ L.Map.BoxZoom = L.Handler.extend({
 
 		this._moved = false;
 
-		L.DomUtil.disableTextSelection();
-		L.DomUtil.disableImageDrag();
+		F.DomUtil.disableTextSelection();
+		F.DomUtil.disableImageDrag();
 
 		this._startPoint = this._map.mouseEventToContainerPoint(e);
 
-		L.DomEvent.on(document, {
-			contextmenu: L.DomEvent.stop,
+		F.DomEvent.on(document, {
+			contextmenu: F.DomEvent.stop,
 			mousemove: this._onMouseMove,
 			mouseup: this._onMouseUp,
 			keydown: this._onKeyDown
@@ -48,18 +48,18 @@ L.Map.BoxZoom = L.Handler.extend({
 		if (!this._moved) {
 			this._moved = true;
 
-			this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._container);
-			L.DomUtil.addClass(this._container, 'leaflet-crosshair');
+			this._box = F.DomUtil.create('div', 'zoom-box', this._container);
+			F.DomUtil.addClass(this._container, 'crosshair');
 
 			this._map.fire('boxzoomstart');
 		}
 
 		this._point = this._map.mouseEventToContainerPoint(e);
 
-		var bounds = new L.Bounds(this._point, this._startPoint),
+		var bounds = new F.Leaflet.Bounds(this._point, this._startPoint),
 		    size = bounds.getSize();
 
-		L.DomUtil.setPosition(this._box, bounds.min);
+		F.DomUtil.setPosition(this._box, bounds.min);
 
 		this._box.style.width  = size.x + 'px';
 		this._box.style.height = size.y + 'px';
@@ -67,15 +67,15 @@ L.Map.BoxZoom = L.Handler.extend({
 
 	_finish: function () {
 		if (this._moved) {
-			L.DomUtil.remove(this._box);
-			L.DomUtil.removeClass(this._container, 'leaflet-crosshair');
+			F.DomUtil.remove(this._box);
+			F.DomUtil.removeClass(this._container, 'crosshair');
 		}
 
-		L.DomUtil.enableTextSelection();
-		L.DomUtil.enableImageDrag();
+		F.DomUtil.enableTextSelection();
+		F.DomUtil.enableImageDrag();
 
-		L.DomEvent.off(document, {
-			contextmenu: L.DomEvent.stop,
+		F.DomEvent.off(document, {
+			contextmenu: F.DomEvent.stop,
 			mousemove: this._onMouseMove,
 			mouseup: this._onMouseUp,
 			keydown: this._onKeyDown
@@ -89,7 +89,7 @@ L.Map.BoxZoom = L.Handler.extend({
 
 		if (!this._moved) { return; }
 
-		var bounds = new L.LatLngBounds(
+		var bounds = new F.Leaflet.LatLngBounds(
 		        this._map.containerPointToLatLng(this._startPoint),
 		        this._map.containerPointToLatLng(this._point));
 
@@ -105,4 +105,4 @@ L.Map.BoxZoom = L.Handler.extend({
 	}
 });
 
-L.Map.addInitHook('addHandler', 'boxZoom', L.Map.BoxZoom);
+F.Leaflet.Map.addInitHook('addHandler', 'boxZoom', F.Leaflet.Map.BoxZoom);

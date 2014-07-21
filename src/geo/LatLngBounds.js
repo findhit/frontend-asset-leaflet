@@ -1,8 +1,8 @@
 /*
- * L.LatLngBounds represents a rectangular area on the map in geographical coordinates.
+ * F.Leaflet.LatLngBounds represents a rectangular area on the map in geographical coordinates.
  */
 
-L.LatLngBounds = function (southWest, northEast) { // (LatLng, LatLng) or (LatLng[])
+F.Leaflet.LatLngBounds = function (southWest, northEast) { // (LatLng, LatLng) or (LatLng[])
 	if (!southWest) { return; }
 
 	var latlngs = northEast ? [southWest, northEast] : southWest;
@@ -12,7 +12,7 @@ L.LatLngBounds = function (southWest, northEast) { // (LatLng, LatLng) or (LatLn
 	}
 };
 
-L.LatLngBounds.prototype = {
+F.Leaflet.LatLngBounds.prototype = {
 
 	// extend the bounds to contain the given point or bounds
 	extend: function (obj) { // (LatLng) or (LatLngBounds)
@@ -20,23 +20,23 @@ L.LatLngBounds.prototype = {
 			ne = this._northEast,
 			sw2, ne2;
 
-		if (obj instanceof L.LatLng) {
+		if (obj instanceof F.Leaflet.LatLng) {
 			sw2 = obj;
 			ne2 = obj;
 
-		} else if (obj instanceof L.LatLngBounds) {
+		} else if (obj instanceof F.Leaflet.LatLngBounds) {
 			sw2 = obj._southWest;
 			ne2 = obj._northEast;
 
 			if (!sw2 || !ne2) { return this; }
 
 		} else {
-			return obj ? this.extend(L.latLng(obj) || L.latLngBounds(obj)) : this;
+			return obj ? this.extend(F.Leaflet.latLng(obj) || F.Leaflet.latLngBounds(obj)) : this;
 		}
 
 		if (!sw && !ne) {
-			this._southWest = new L.LatLng(sw2.lat, sw2.lng);
-			this._northEast = new L.LatLng(ne2.lat, ne2.lng);
+			this._southWest = new F.Leaflet.LatLng(sw2.lat, sw2.lng);
+			this._northEast = new F.Leaflet.LatLng(ne2.lat, ne2.lng);
 		} else {
 			sw.lat = Math.min(sw2.lat, sw.lat);
 			sw.lng = Math.min(sw2.lng, sw.lng);
@@ -54,13 +54,13 @@ L.LatLngBounds.prototype = {
 		    heightBuffer = Math.abs(sw.lat - ne.lat) * bufferRatio,
 		    widthBuffer = Math.abs(sw.lng - ne.lng) * bufferRatio;
 
-		return new L.LatLngBounds(
-		        new L.LatLng(sw.lat - heightBuffer, sw.lng - widthBuffer),
-		        new L.LatLng(ne.lat + heightBuffer, ne.lng + widthBuffer));
+		return new F.Leaflet.LatLngBounds(
+		        new F.Leaflet.LatLng(sw.lat - heightBuffer, sw.lng - widthBuffer),
+		        new F.Leaflet.LatLng(ne.lat + heightBuffer, ne.lng + widthBuffer));
 	},
 
 	getCenter: function () { // -> LatLng
-		return new L.LatLng(
+		return new F.Leaflet.LatLng(
 		        (this._southWest.lat + this._northEast.lat) / 2,
 		        (this._southWest.lng + this._northEast.lng) / 2);
 	},
@@ -74,11 +74,11 @@ L.LatLngBounds.prototype = {
 	},
 
 	getNorthWest: function () {
-		return new L.LatLng(this.getNorth(), this.getWest());
+		return new F.Leaflet.LatLng(this.getNorth(), this.getWest());
 	},
 
 	getSouthEast: function () {
-		return new L.LatLng(this.getSouth(), this.getEast());
+		return new F.Leaflet.LatLng(this.getSouth(), this.getEast());
 	},
 
 	getWest: function () {
@@ -98,17 +98,17 @@ L.LatLngBounds.prototype = {
 	},
 
 	contains: function (obj) { // (LatLngBounds) or (LatLng) -> Boolean
-		if (typeof obj[0] === 'number' || obj instanceof L.LatLng) {
-			obj = L.latLng(obj);
+		if (typeof obj[0] === 'number' || obj instanceof F.Leaflet.LatLng) {
+			obj = F.Leaflet.latLng(obj);
 		} else {
-			obj = L.latLngBounds(obj);
+			obj = F.Leaflet.latLngBounds(obj);
 		}
 
 		var sw = this._southWest,
 		    ne = this._northEast,
 		    sw2, ne2;
 
-		if (obj instanceof L.LatLngBounds) {
+		if (obj instanceof F.Leaflet.LatLngBounds) {
 			sw2 = obj.getSouthWest();
 			ne2 = obj.getNorthEast();
 		} else {
@@ -120,7 +120,7 @@ L.LatLngBounds.prototype = {
 	},
 
 	intersects: function (bounds) { // (LatLngBounds)
-		bounds = L.latLngBounds(bounds);
+		bounds = F.Leaflet.latLngBounds(bounds);
 
 		var sw = this._southWest,
 		    ne = this._northEast,
@@ -140,7 +140,7 @@ L.LatLngBounds.prototype = {
 	equals: function (bounds) { // (LatLngBounds)
 		if (!bounds) { return false; }
 
-		bounds = L.latLngBounds(bounds);
+		bounds = F.Leaflet.latLngBounds(bounds);
 
 		return this._southWest.equals(bounds.getSouthWest()) &&
 		       this._northEast.equals(bounds.getNorthEast());
@@ -153,9 +153,9 @@ L.LatLngBounds.prototype = {
 
 //TODO International date line?
 
-L.latLngBounds = function (a, b) { // (LatLngBounds) or (LatLng, LatLng)
-	if (!a || a instanceof L.LatLngBounds) {
+F.Leaflet.latLngBounds = function (a, b) { // (LatLngBounds) or (LatLng, LatLng)
+	if (!a || a instanceof F.Leaflet.LatLngBounds) {
 		return a;
 	}
-	return new L.LatLngBounds(a, b);
+	return new F.Leaflet.LatLngBounds(a, b);
 };

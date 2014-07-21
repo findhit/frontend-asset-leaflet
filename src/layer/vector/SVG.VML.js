@@ -1,9 +1,9 @@
 /*
- * Vector rendering for IE7-8 through VML.
+ * Vector rendering for IE7-8 through VMF.Leaflet.
  * Thanks to Dmitry Baranovsky and his Raphael library for inspiration!
  */
 
-L.Browser.vml = !L.Browser.svg && (function () {
+F.Browser.vml = !F.Browser.svg && (function () {
 	try {
 		var div = document.createElement('div');
 		div.innerHTML = '<v:shape adj="1"/>';
@@ -19,10 +19,10 @@ L.Browser.vml = !L.Browser.svg && (function () {
 }());
 
 // redefine some SVG methods to handle VML syntax which is similar but with some differences
-L.SVG.include(!L.Browser.vml ? {} : {
+F.Leaflet.SVG.include(!F.Browser.vml ? {} : {
 
 	_initContainer: function () {
-		this._container = L.DomUtil.create('div', 'leaflet-vml-container');
+		this._container = F.DomUtil.create('div', 'vml-container');
 
 		this._paths = {};
 		this._initEvents();
@@ -30,17 +30,17 @@ L.SVG.include(!L.Browser.vml ? {} : {
 
 	_update: function () {
 		if (this._map._animatingZoom) { return; }
-		L.Renderer.prototype._update.call(this);
+		F.Leaflet.Renderer.prototype._update.call(this);
 	},
 
 	_initPath: function (layer) {
-		var container = layer._container = L.SVG.create('shape');
+		var container = layer._container = F.Leaflet.SVG.create('shape');
 
-		L.DomUtil.addClass(container, 'leaflet-vml-shape ' + (this.options.className || ''));
+		F.DomUtil.addClass(container, 'vml-shape ' + (this.options.className || ''));
 
 		container.coordsize = '1 1';
 
-		layer._path = L.SVG.create('path');
+		layer._path = F.Leaflet.SVG.create('path');
 		container.appendChild(layer._path);
 
 		this._updateStyle(layer);
@@ -49,13 +49,13 @@ L.SVG.include(!L.Browser.vml ? {} : {
 	_addPath: function (layer) {
 		var container = layer._container;
 		this._container.appendChild(container);
-		this._paths[L.stamp(container)] = layer;
+		this._paths[F.stamp(container)] = layer;
 	},
 
 	_removePath: function (layer) {
 		var container = layer._container;
-		L.DomUtil.remove(container);
-		delete this._paths[L.stamp(container)];
+		F.DomUtil.remove(container);
+		delete this._paths[F.stamp(container)];
 	},
 
 	_updateStyle: function (layer) {
@@ -69,7 +69,7 @@ L.SVG.include(!L.Browser.vml ? {} : {
 
 		if (options.stroke) {
 			if (!stroke) {
-				stroke = layer._stroke = L.SVG.create('stroke');
+				stroke = layer._stroke = F.Leaflet.SVG.create('stroke');
 				container.appendChild(stroke);
 			}
 			stroke.weight = options.weight + 'px';
@@ -77,7 +77,7 @@ L.SVG.include(!L.Browser.vml ? {} : {
 			stroke.opacity = options.opacity;
 
 			if (options.dashArray) {
-				stroke.dashStyle = L.Util.isArray(options.dashArray) ?
+				stroke.dashStyle = F.Util.isArray(options.dashArray) ?
 				    options.dashArray.join(' ') :
 				    options.dashArray.replace(/( *, *)/g, ' ');
 			} else {
@@ -93,7 +93,7 @@ L.SVG.include(!L.Browser.vml ? {} : {
 
 		if (options.fill) {
 			if (!fill) {
-				fill = layer._fill = L.SVG.create('fill');
+				fill = layer._fill = F.Leaflet.SVG.create('fill');
 				container.appendChild(fill);
 			}
 			fill.color = options.fillColor || options.color;
@@ -119,8 +119,8 @@ L.SVG.include(!L.Browser.vml ? {} : {
 	}
 });
 
-if (L.Browser.vml) {
-	L.SVG.create = (function () {
+if (F.Browser.vml) {
+	F.Leaflet.SVG.create = (function () {
 		try {
 			document.namespaces.add('lvml', 'urn:schemas-microsoft-com:vml');
 			return function (name) {

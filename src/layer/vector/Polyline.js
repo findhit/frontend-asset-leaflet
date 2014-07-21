@@ -1,8 +1,8 @@
 /*
- * L.Polyline implements polyline vector layer (a set of points connected with lines)
+ * F.Leaflet.Polyline implements polyline vector layer (a set of points connected with lines)
  */
 
-L.Polyline = L.Path.extend({
+F.Leaflet.Polyline = F.Leaflet.Path.extend({
 
 	options: {
 		// how much to simplify the polyline on each zoom level
@@ -12,7 +12,7 @@ L.Polyline = L.Path.extend({
 	},
 
 	initialize: function (latlngs, options) {
-		L.setOptions(this, options);
+		F.Leaflet.setOptions(this, options);
 		this._setLatLngs(latlngs);
 	},
 
@@ -28,7 +28,7 @@ L.Polyline = L.Path.extend({
 
 	addLatLng: function (latlng) {
 		// TODO rings
-		latlng = L.latLng(latlng);
+		latlng = F.Leaflet.latLng(latlng);
 		this._latlngs.push(latlng);
 		this._bounds.extend(latlng);
 		return this.redraw();
@@ -45,7 +45,7 @@ L.Polyline = L.Path.extend({
 	closestLayerPoint: function (p) {
 		var minDistance = Infinity,
 		    minPoint = null,
-		    closest = L.LineUtil._sqClosestPointOnSegment,
+		    closest = F.Leaflet.LineUtil._sqClosestPointOnSegment,
 		    p1, p2;
 
 		for (var j = 0, jLen = this._parts.length; j < jLen; j++) {
@@ -101,7 +101,7 @@ L.Polyline = L.Path.extend({
 	},
 
 	_setLatLngs: function (latlngs) {
-		this._bounds = new L.LatLngBounds();
+		this._bounds = new F.Leaflet.LatLngBounds();
 		this._latlngs = this._convertLatLngs(latlngs);
 	},
 
@@ -112,7 +112,7 @@ L.Polyline = L.Path.extend({
 
 		for (var i = 0, len = latlngs.length; i < len; i++) {
 			if (flat) {
-				result[i] = L.latLng(latlngs[i]);
+				result[i] = F.Leaflet.latLng(latlngs[i]);
 				this._bounds.extend(result[i]);
 			} else {
 				result[i] = this._convertLatLngs(latlngs[i]);
@@ -124,7 +124,7 @@ L.Polyline = L.Path.extend({
 
 	_flat: function (latlngs) {
 		// true if it's a flat array of latlngs; false if nested
-		return !L.Util.isArray(latlngs[0]) || typeof latlngs[0][0] !== 'object';
+		return !F.Util.isArray(latlngs[0]) || typeof latlngs[0][0] !== 'object';
 	},
 
 	_project: function () {
@@ -133,10 +133,10 @@ L.Polyline = L.Path.extend({
 
 		// project bounds as well to use later for Canvas hit detection/etc.
 		var w = this._clickTolerance(),
-			p = new L.Point(w, -w);
+			p = new F.Leaflet.Point(w, -w);
 
 		if (this._latlngs.length) {
-			this._pxBounds = new L.Bounds(
+			this._pxBounds = new F.Leaflet.Bounds(
 				this._map.latLngToLayerPoint(this._bounds.getSouthWest())._subtract(p),
 				this._map.latLngToLayerPoint(this._bounds.getNorthEast())._add(p));
 		}
@@ -145,7 +145,7 @@ L.Polyline = L.Path.extend({
 	// recursively turns latlngs into a set of rings with projected coordinates
 	_projectLatlngs: function (latlngs, result) {
 
-		var flat = latlngs[0] instanceof L.LatLng,
+		var flat = latlngs[0] instanceof F.Leaflet.LatLng,
 		    len = latlngs.length,
 		    i, ring;
 
@@ -179,7 +179,7 @@ L.Polyline = L.Path.extend({
 			points = this._rings[i];
 
 			for (j = 0, len2 = points.length; j < len2 - 1; j++) {
-				segment = L.LineUtil.clipSegment(points[j], points[j + 1], bounds, j);
+				segment = F.Leaflet.LineUtil.clipSegment(points[j], points[j + 1], bounds, j);
 
 				if (!segment) { continue; }
 
@@ -201,7 +201,7 @@ L.Polyline = L.Path.extend({
 			tolerance = this.options.smoothFactor;
 
 		for (var i = 0, len = parts.length; i < len; i++) {
-			parts[i] = L.LineUtil.simplify(parts[i], tolerance);
+			parts[i] = F.Leaflet.LineUtil.simplify(parts[i], tolerance);
 		}
 	},
 
@@ -218,6 +218,6 @@ L.Polyline = L.Path.extend({
 	}
 });
 
-L.polyline = function (latlngs, options) {
-	return new L.Polyline(latlngs, options);
+F.Leaflet.polyline = function (latlngs, options) {
+	return new F.Leaflet.Polyline(latlngs, options);
 };

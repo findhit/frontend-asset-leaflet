@@ -1,30 +1,30 @@
 /*
- * L.Handler.ScrollWheelZoom is used by L.Map to enable mouse scroll wheel zoom on the map.
+ * F.Leaflet.Handler.ScrollWheelZoom is used by F.Leaflet.Map to enable mouse scroll wheel zoom on the map.
  */
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	scrollWheelZoom: true
 });
 
-L.Map.ScrollWheelZoom = L.Handler.extend({
+F.Leaflet.Map.ScrollWheelZoom = F.Leaflet.Handler.extend({
 	addHooks: function () {
-		L.DomEvent.on(this._map._container, {
+		F.DomEvent.on(this._map._container, {
 			mousewheel: this._onWheelScroll,
-			MozMousePixelScroll: L.DomEvent.preventDefault
+			MozMousePixelScroll: F.DomEvent.preventDefault
 		}, this);
 
 		this._delta = 0;
 	},
 
 	removeHooks: function () {
-		L.DomEvent.off(this._map._container, {
+		F.DomEvent.off(this._map._container, {
 			mousewheel: this._onWheelScroll,
-			MozMousePixelScroll: L.DomEvent.preventDefault
+			MozMousePixelScroll: F.DomEvent.preventDefault
 		}, this);
 	},
 
 	_onWheelScroll: function (e) {
-		var delta = L.DomEvent.getWheelDelta(e);
+		var delta = F.DomEvent.getWheelDelta(e);
 
 		this._delta += delta;
 		this._lastMousePos = this._map.mouseEventToContainerPoint(e);
@@ -36,9 +36,9 @@ L.Map.ScrollWheelZoom = L.Handler.extend({
 		var left = Math.max(40 - (+new Date() - this._startTime), 0);
 
 		clearTimeout(this._timer);
-		this._timer = setTimeout(L.bind(this._performZoom, this), left);
+		this._timer = setTimeout(F.bind(this._performZoom, this), left);
 
-		L.DomEvent.stop(e);
+		F.DomEvent.stop(e);
 	},
 
 	_performZoom: function () {
@@ -63,4 +63,4 @@ L.Map.ScrollWheelZoom = L.Handler.extend({
 	}
 });
 
-L.Map.addInitHook('addHandler', 'scrollWheelZoom', L.Map.ScrollWheelZoom);
+F.Leaflet.Map.addInitHook('addHandler', 'scrollWheelZoom', F.Leaflet.Map.ScrollWheelZoom);

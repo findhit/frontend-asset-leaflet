@@ -1,9 +1,9 @@
 /*
- * L.DivIcon is a lightweight HTML-based icon class (as opposed to the image-based L.Icon)
- * to use with L.Marker.
+ * F.Leaflet.DivIcon is a lightweight HTML-based icon class (as opposed to the image-based F.Leaflet.Icon)
+ * to use with F.Leaflet.Marker.
  */
 
-L.DivIcon = L.Icon.extend({
+F.Leaflet.DivIcon = F.Leaflet.Icon.extend({
 	options: {
 		iconSize: [12, 12], // also can be set through CSS
 		/*
@@ -12,7 +12,7 @@ L.DivIcon = L.Icon.extend({
 		html: (String)
 		bgPos: (Point)
 		*/
-		className: 'leaflet-div-icon',
+		className: 'div-icon',
 		html: false
 	},
 
@@ -35,6 +35,6 @@ L.DivIcon = L.Icon.extend({
 	}
 });
 
-L.divIcon = function (options) {
-	return new L.DivIcon(options);
+F.Leaflet.divIcon = function (options) {
+	return new F.Leaflet.DivIcon(options);
 };

@@ -1,8 +1,8 @@
 /*
- * L.Control.Scale is used for displaying metric/imperial scale on the map.
+ * F.Leaflet.Control.Scale is used for displaying metric/imperial scale on the map.
  */
 
-L.Control.Scale = L.Control.extend({
+F.Leaflet.Control.Scale = F.Leaflet.Control.extend({
 	options: {
 		position: 'bottomleft',
 		maxWidth: 100,
@@ -12,8 +12,8 @@ L.Control.Scale = L.Control.extend({
 	},
 
 	onAdd: function (map) {
-		var className = 'leaflet-control-scale',
-		    container = L.DomUtil.create('div', className),
+		var className = 'control-scale',
+		    container = F.DomUtil.create('div', className),
 		    options = this.options;
 
 		this._addScales(options, className + '-line', container);
@@ -30,10 +30,10 @@ L.Control.Scale = L.Control.extend({
 
 	_addScales: function (options, className, container) {
 		if (options.metric) {
-			this._mScale = L.DomUtil.create('div', className, container);
+			this._mScale = F.DomUtil.create('div', className, container);
 		}
 		if (options.imperial) {
-			this._iScale = L.DomUtil.create('div', className, container);
+			this._iScale = F.DomUtil.create('div', className, container);
 		}
 	},
 
@@ -41,7 +41,7 @@ L.Control.Scale = L.Control.extend({
 		var map = this._map,
 		    y = map.getSize().y / 2;
 
-		var maxMeters = L.CRS.Earth.distance(
+		var maxMeters = F.Leaflet.CRS.Earth.distance(
 				map.containerPointToLatLng([0, y]),
 				map.containerPointToLatLng([this.options.maxWidth, y]));
 
@@ -97,6 +97,6 @@ L.Control.Scale = L.Control.extend({
 	}
 });
 
-L.control.scale = function (options) {
-	return new L.Control.Scale(options);
+F.Leaflet.control.scale = function (options) {
+	return new F.Leaflet.Control.Scale(options);
 };

@@ -1,8 +1,8 @@
 /*
- * Provides L.Map with convenient shortcuts for using browser geolocation features.
+ * Provides F.Leaflet.Map with convenient shortcuts for using browser geolocation features.
  */
 
-L.Map.include({
+F.Leaflet.Map.include({
 	_defaultLocateOptions: {
 		timeout: 10000,
 		watch: false
@@ -14,7 +14,7 @@ L.Map.include({
 
 	locate: function (/*Object*/ options) {
 
-		options = this._locateOptions = L.extend(this._defaultLocateOptions, options);
+		options = this._locateOptions = F.Leaflet.extend(this._defaultLocateOptions, options);
 
 		if (!navigator.geolocation) {
 			this._handleGeolocationError({
@@ -24,8 +24,8 @@ L.Map.include({
 			return this;
 		}
 
-		var onResponse = L.bind(this._handleGeolocationResponse, this),
-			onError = L.bind(this._handleGeolocationError, this);
+		var onResponse = F.bind(this._handleGeolocationResponse, this),
+			onError = F.bind(this._handleGeolocationError, this);
 
 		if (options.watch) {
 			this._locationWatchId =
@@ -65,12 +65,12 @@ L.Map.include({
 	_handleGeolocationResponse: function (pos) {
 		var lat = pos.coords.latitude,
 		    lng = pos.coords.longitude,
-		    latlng = new L.LatLng(lat, lng),
+		    latlng = new F.Leaflet.LatLng(lat, lng),
 
 		    latAccuracy = 180 * pos.coords.accuracy / 40075017,
 		    lngAccuracy = latAccuracy / Math.cos((Math.PI / 180) * lat),
 
-		    bounds = L.latLngBounds(
+		    bounds = F.Leaflet.latLngBounds(
 		            [lat - latAccuracy, lng - lngAccuracy],
 		            [lat + latAccuracy, lng + lngAccuracy]),
 

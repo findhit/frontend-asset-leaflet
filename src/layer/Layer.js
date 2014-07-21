@@ -1,5 +1,5 @@
 
-L.Layer = L.Evented.extend({
+F.Leaflet.Layer = F.Evented.extend({
 
 	options: {
 		pane: 'overlayPane'
@@ -50,9 +50,9 @@ L.Layer = L.Evented.extend({
 });
 
 
-L.Map.include({
+F.Leaflet.Map.include({
 	addLayer: function (layer) {
-		var id = L.stamp(layer);
+		var id = F.stamp(layer);
 		if (this._layers[id]) { return layer; }
 		this._layers[id] = layer;
 
@@ -68,7 +68,7 @@ L.Map.include({
 	},
 
 	removeLayer: function (layer) {
-		var id = L.stamp(layer);
+		var id = F.stamp(layer);
 
 		if (!this._layers[id]) { return this; }
 
@@ -97,7 +97,7 @@ L.Map.include({
 	},
 
 	hasLayer: function (layer) {
-		return !!layer && (L.stamp(layer) in this._layers);
+		return !!layer && (F.stamp(layer) in this._layers);
 	},
 
 	eachLayer: function (method, context) {
@@ -108,7 +108,7 @@ L.Map.include({
 	},
 
 	_addLayers: function (layers) {
-		layers = layers ? (L.Util.isArray(layers) ? layers : [layers]) : [];
+		layers = layers ? (F.Util.isArray(layers) ? layers : [layers]) : [];
 
 		for (var i = 0, len = layers.length; i < len; i++) {
 			this.addLayer(layers[i]);
@@ -117,13 +117,13 @@ L.Map.include({
 
 	_addZoomLimit: function (layer) {
 		if (isNaN(layer.options.maxZoom) || !isNaN(layer.options.minZoom)) {
-			this._zoomBoundLayers[L.stamp(layer)] = layer;
+			this._zoomBoundLayers[F.stamp(layer)] = layer;
 			this._updateZoomLevels();
 		}
 	},
 
 	_removeZoomLimit: function (layer) {
-		var id = L.stamp(layer);
+		var id = F.stamp(layer);
 
 		if (this._zoomBoundLayers[id]) {
 			delete this._zoomBoundLayers[id];

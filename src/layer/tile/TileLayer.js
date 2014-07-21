@@ -1,8 +1,8 @@
 /*
- * L.TileLayer is used for standard xyz-numbered tile layers.
+ * F.Leaflet.TileLayer is used for standard xyz-numbered tile layers.
  */
 
-L.TileLayer = L.GridLayer.extend({
+F.Leaflet.TileLayer = F.Leaflet.GridLayer.extend({
 
 	options: {
 		minZoom: 0,
@@ -25,10 +25,10 @@ L.TileLayer = L.GridLayer.extend({
 
 		this._url = url;
 
-		options = L.setOptions(this, options);
+		options = F.Leaflet.setOptions(this, options);
 
 		// detecting retina displays, adjusting tileSize and zoom levels
-		if (options.detectRetina && L.Browser.retina && options.maxZoom > 0) {
+		if (options.detectRetina && F.Browser.retina && options.maxZoom > 0) {
 
 			options.tileSize = Math.floor(options.tileSize / 2);
 			options.zoomOffset++;
@@ -54,8 +54,8 @@ L.TileLayer = L.GridLayer.extend({
 	createTile: function (coords, done) {
 		var tile = document.createElement('img');
 
-		tile.onload = L.bind(this._tileOnLoad, this, done, tile);
-		tile.onerror = L.bind(this._tileOnError, this, done, tile);
+		tile.onload = F.bind(this._tileOnLoad, this, done, tile);
+		tile.onerror = F.bind(this._tileOnError, this, done, tile);
 		
 		if (this.options.crossOrigin) {
 			tile.crossOrigin = '';
@@ -73,8 +73,8 @@ L.TileLayer = L.GridLayer.extend({
 	},
 
 	getTileUrl: function (coords) {
-		return L.Util.template(this._url, L.extend({
-			r: this.options.detectRetina && L.Browser.retina && this.options.maxZoom > 0 ? '@2x' : '',
+		return F.Util.template(this._url, F.Leaflet.extend({
+			r: this.options.detectRetina && F.Browser.retina && this.options.maxZoom > 0 ? '@2x' : '',
 			s: this._getSubdomain(coords),
 			x: coords.x,
 			y: this.options.tms ? this._tileNumBounds.max.y - coords.y : coords.y,
@@ -109,12 +109,12 @@ L.TileLayer = L.GridLayer.extend({
 	_removeTile: function (key) {
 		var tile = this._tiles[key];
 
-		L.GridLayer.prototype._removeTile.call(this, key);
+		F.Leaflet.GridLayer.prototype._removeTile.call(this, key);
 
 		// for https://github.com/Leaflet/Leaflet/issues/137
-		if (!L.Browser.android) {
+		if (!F.Browser.android) {
 			tile.onload = null;
-			tile.src = L.Util.emptyImageUrl;
+			tile.src = F.Util.emptyImageUrl;
 		}
 	},
 
@@ -143,17 +143,17 @@ L.TileLayer = L.GridLayer.extend({
 		for (i in this._tiles) {
 			tile = this._tiles[i];
 
-			tile.onload = L.Util.falseFn;
-			tile.onerror = L.Util.falseFn;
+			tile.onload = F.Util.falseFn;
+			tile.onerror = F.Util.falseFn;
 
 			if (!tile.complete) {
-				tile.src = L.Util.emptyImageUrl;
-				L.DomUtil.remove(tile);
+				tile.src = F.Util.emptyImageUrl;
+				F.DomUtil.remove(tile);
 			}
 		}
 	}
 });
 
-L.tileLayer = function (url, options) {
-	return new L.TileLayer(url, options);
+F.Leaflet.tileLayer = function (url, options) {
+	return new F.Leaflet.TileLayer(url, options);
 };

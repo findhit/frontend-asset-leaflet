@@ -1,11 +1,11 @@
 /*
- * L.Class powers the OOP facilities of the library.
+ * F.Class powers the OOP facilities of the library.
  * Thanks to John Resig and Dean Edwards for inspiration!
  */
 
-L.Class = function () {};
+F.Class = function () {};
 
-L.Class.extend = function (props) {
+F.Class.extend = function (props) {
 
 	// extended class with the new prototype
 	var NewClass = function () {
@@ -24,7 +24,7 @@ L.Class.extend = function (props) {
 	// jshint camelcase: false
 	var parentProto = NewClass.__super__ = this.prototype;
 
-	var proto = L.Util.create(parentProto);
+	var proto = F.Util.create(parentProto);
 	proto.constructor = NewClass;
 
 	NewClass.prototype = proto;
@@ -38,23 +38,23 @@ L.Class.extend = function (props) {
 
 	// mix static properties into the class
 	if (props.statics) {
-		L.extend(NewClass, props.statics);
+		F.Leaflet.extend(NewClass, props.statics);
 		delete props.statics;
 	}
 
 	// mix includes into the prototype
 	if (props.includes) {
-		L.Util.extend.apply(null, [proto].concat(props.includes));
+		F.Util.extend.apply(null, [proto].concat(props.includes));
 		delete props.includes;
 	}
 
 	// merge options
 	if (proto.options) {
-		props.options = L.Util.extend(L.Util.create(proto.options), props.options);
+		props.options = F.Util.extend(F.Util.create(proto.options), props.options);
 	}
 
 	// mix given properties into the prototype
-	L.extend(proto, props);
+	F.Leaflet.extend(proto, props);
 
 	proto._initHooks = [];
 
@@ -79,17 +79,17 @@ L.Class.extend = function (props) {
 
 
 // method for adding properties to prototype
-L.Class.include = function (props) {
-	L.extend(this.prototype, props);
+F.Class.include = function (props) {
+	F.Leaflet.extend(this.prototype, props);
 };
 
 // merge new default options to the Class
-L.Class.mergeOptions = function (options) {
-	L.extend(this.prototype.options, options);
+F.Class.mergeOptions = function (options) {
+	F.Leaflet.extend(this.prototype.options, options);
 };
 
 // add a constructor hook
-L.Class.addInitHook = function (fn) { // (Function) || (String, args...)
+F.Class.addInitHook = function (fn) { // (Function) || (String, args...)
 	var args = Array.prototype.slice.call(arguments, 1);
 
 	var init = typeof fn === 'function' ? fn : function () {

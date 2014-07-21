@@ -1,8 +1,8 @@
 /*
- * L.LatLng represents a geographical point with latitude and longitude coordinates.
+ * F.Leaflet.LatLng represents a geographical point with latitude and longitude coordinates.
  */
 
-L.LatLng = function (lat, lng, alt) {
+F.Leaflet.LatLng = function (lat, lng, alt) {
 	if (isNaN(lat) || isNaN(lng)) {
 		throw new Error('Invalid LatLng object: (' + lat + ', ' + lng + ')');
 	}
@@ -15,11 +15,11 @@ L.LatLng = function (lat, lng, alt) {
 	}
 };
 
-L.LatLng.prototype = {
+F.Leaflet.LatLng.prototype = {
 	equals: function (obj, maxMargin) {
 		if (!obj) { return false; }
 
-		obj = L.latLng(obj);
+		obj = F.Leaflet.latLng(obj);
 
 		var margin = Math.max(
 		        Math.abs(this.lat - obj.lat),
@@ -30,16 +30,16 @@ L.LatLng.prototype = {
 
 	toString: function (precision) {
 		return 'LatLng(' +
-		        L.Util.formatNum(this.lat, precision) + ', ' +
-		        L.Util.formatNum(this.lng, precision) + ')';
+		        F.Util.formatNum(this.lat, precision) + ', ' +
+		        F.Util.formatNum(this.lng, precision) + ')';
 	},
 
 	distanceTo: function (other) {
-		return L.CRS.Earth.distance(this, L.latLng(other));
+		return F.Leaflet.CRS.Earth.distance(this, F.Leaflet.latLng(other));
 	},
 
 	wrap: function () {
-		return L.CRS.Earth.wrapLatLng(this);
+		return F.Leaflet.CRS.Earth.wrapLatLng(this);
 	}
 };
 
@@ -47,25 +47,25 @@ L.LatLng.prototype = {
 // constructs LatLng with different signatures
 // (LatLng) or ([Number, Number]) or (Number, Number) or (Object)
 
-L.latLng = function (a, b) {
-	if (a instanceof L.LatLng) {
+F.Leaflet.latLng = function (a, b) {
+	if (a instanceof F.Leaflet.LatLng) {
 		return a;
 	}
-	if (L.Util.isArray(a) && typeof a[0] !== 'object') {
+	if (F.Util.isArray(a) && typeof a[0] !== 'object') {
 		if (a.length === 3) {
-			return new L.LatLng(a[0], a[1], a[2]);
+			return new F.Leaflet.LatLng(a[0], a[1], a[2]);
 		}
-		return new L.LatLng(a[0], a[1]);
+		return new F.Leaflet.LatLng(a[0], a[1]);
 	}
 	if (a === undefined || a === null) {
 		return a;
 	}
 	if (typeof a === 'object' && 'lat' in a) {
-		return new L.LatLng(a.lat, 'lng' in a ? a.lng : a.lon);
+		return new F.Leaflet.LatLng(a.lat, 'lng' in a ? a.lng : a.lon);
 	}
 	if (b === undefined) {
 		return null;
 	}
-	return new L.LatLng(a, b);
+	return new F.Leaflet.LatLng(a, b);
 };
 

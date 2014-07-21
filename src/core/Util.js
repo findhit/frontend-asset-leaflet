@@ -1,8 +1,8 @@
 /*
- * L.Util contains various utility functions used throughout Leaflet code.
+ * F.Util contains various utility functions used throughout Leaflet code.
  */
 
-L.Util = {
+F.Util = {
 	// extend an object with properties of one or more other objects
 	extend: function (dest) {
 		var i, j, len, src;
@@ -43,7 +43,7 @@ L.Util = {
 	// return unique ID of an object
 	stamp: function (obj) {
 		// jshint camelcase: false
-		obj._leaflet_id = obj._leaflet_id || ++L.Util.lastId;
+		obj._leaflet_id = obj._leaflet_id || ++F.Util.lastId;
 		return obj._leaflet_id;
 	},
 
@@ -102,13 +102,13 @@ L.Util = {
 
 	// split a string into words
 	splitWords: function (str) {
-		return L.Util.trim(str).split(/\s+/);
+		return F.Util.trim(str).split(/\s+/);
 	},
 
 	// set options to an object, inheriting parent's options as well
 	setOptions: function (obj, options) {
 		if (!obj.hasOwnProperty('options')) {
-			obj.options = obj.options ? L.Util.create(obj.options) : {};
+			obj.options = obj.options ? F.Util.create(obj.options) : {};
 		}
 		for (var i in options) {
 			obj.options[i] = options[i];
@@ -127,7 +127,7 @@ L.Util = {
 
 	// super-simple templating facility, used for TileLayer URLs
 	template: function (str, data) {
-		return str.replace(L.Util.templateRe, function (str, key) {
+		return str.replace(F.Util.templateRe, function (str, key) {
 			var value = data[key];
 
 			if (value === undefined) {
@@ -173,15 +173,15 @@ L.Util = {
 	               getPrefixed('CancelRequestAnimationFrame') || function (id) { window.clearTimeout(id); };
 
 
-	L.Util.requestAnimFrame = function (fn, context, immediate) {
+	F.Util.requestAnimFrame = function (fn, context, immediate) {
 		if (immediate && requestFn === timeoutDefer) {
 			fn.call(context);
 		} else {
-			return requestFn.call(window, L.bind(fn, context));
+			return requestFn.call(window, F.bind(fn, context));
 		}
 	};
 
-	L.Util.cancelAnimFrame = function (id) {
+	F.Util.cancelAnimFrame = function (id) {
 		if (id) {
 			cancelFn.call(window, id);
 		}
@@ -189,7 +189,7 @@ L.Util = {
 })();
 
 // shortcuts for most used utility functions
-L.extend = L.Util.extend;
-L.bind = L.Util.bind;
-L.stamp = L.Util.stamp;
-L.setOptions = L.Util.setOptions;
+F.Leaflet.extend = F.Util.extend;
+F.bind = F.Util.bind;
+F.stamp = F.Util.stamp;
+F.Leaflet.setOptions = F.setOptions;

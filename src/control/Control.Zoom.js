@@ -1,8 +1,8 @@
 /*
- * L.Control.Zoom is used for the default zoom buttons on the map.
+ * F.Leaflet.Control.Zoom is used for the default zoom buttons on the map.
  */
 
-L.Control.Zoom = L.Control.extend({
+F.Leaflet.Control.Zoom = F.Leaflet.Control.extend({
 	options: {
 		position: 'topleft',
 		zoomInText: '+',
@@ -12,8 +12,8 @@ L.Control.Zoom = L.Control.extend({
 	},
 
 	onAdd: function (map) {
-		var zoomName = 'leaflet-control-zoom',
-		    container = L.DomUtil.create('div', zoomName + ' leaflet-bar'),
+		var zoomName = 'control-zoom',
+		    container = F.DomUtil.create('div', zoomName + ' bar'),
 		    options = this.options;
 
 		this._zoomInButton  = this._createButton(options.zoomInText, options.zoomInTitle,
@@ -40,14 +40,14 @@ L.Control.Zoom = L.Control.extend({
 	},
 
 	_createButton: function (html, title, className, container, fn) {
-		var link = L.DomUtil.create('a', className, container);
+		var link = F.DomUtil.create('a', className, container);
 		link.innerHTML = html;
 		link.href = '#';
 		link.title = title;
 
-		L.DomEvent
-		    .on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
-		    .on(link, 'click', L.DomEvent.stop)
+		F.DomEvent
+		    .on(link, 'mousedown dblclick', F.DomEvent.stopPropagation)
+		    .on(link, 'click', F.DomEvent.stop)
 		    .on(link, 'click', fn, this)
 		    .on(link, 'click', this._refocusOnMap, this);
 
@@ -56,32 +56,32 @@ L.Control.Zoom = L.Control.extend({
 
 	_updateDisabled: function () {
 		var map = this._map,
-			className = 'leaflet-disabled';
+			className = 'disabled';
 
-		L.DomUtil.removeClass(this._zoomInButton, className);
-		L.DomUtil.removeClass(this._zoomOutButton, className);
+		F.DomUtil.removeClass(this._zoomInButton, className);
+		F.DomUtil.removeClass(this._zoomOutButton, className);
 
 		if (map._zoom === map.getMinZoom()) {
-			L.DomUtil.addClass(this._zoomOutButton, className);
+			F.DomUtil.addClass(this._zoomOutButton, className);
 		}
 		if (map._zoom === map.getMaxZoom()) {
-			L.DomUtil.addClass(this._zoomInButton, className);
+			F.DomUtil.addClass(this._zoomInButton, className);
 		}
 	}
 });
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	zoomControl: true
 });
 
-L.Map.addInitHook(function () {
+F.Leaflet.Map.addInitHook(function () {
 	if (this.options.zoomControl) {
-		this.zoomControl = new L.Control.Zoom();
+		this.zoomControl = new F.Leaflet.Control.Zoom();
 		this.addControl(this.zoomControl);
 	}
 });
 
-L.control.zoom = function (options) {
-	return new L.Control.Zoom(options);
+F.Leaflet.control.zoom = function (options) {
+	return new F.Leaflet.Control.Zoom(options);
 };
 

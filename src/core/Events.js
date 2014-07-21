@@ -1,8 +1,8 @@
 /*
- * L.Evented is a base class that Leaflet classes inherit from to handle custom events.
+ * F.Evented is a base class that Leaflet classes inherit from to handle custom events.
  */
 
-L.Evented = L.Class.extend({
+F.Evented = F.Class.extend({
 
 	on: function (types, fn, context) {
 
@@ -16,7 +16,7 @@ L.Evented = L.Class.extend({
 
 		} else {
 			// types can be a string of space-separated words
-			types = L.Util.splitWords(types);
+			types = F.Util.splitWords(types);
 
 			for (var i = 0, len = types.length; i < len; i++) {
 				this._on(types[i], fn, context);
@@ -38,7 +38,7 @@ L.Evented = L.Class.extend({
 			}
 
 		} else {
-			types = L.Util.splitWords(types);
+			types = F.Util.splitWords(types);
 
 			for (var i = 0, len = types.length; i < len; i++) {
 				this._off(types[i], fn, context);
@@ -52,7 +52,7 @@ L.Evented = L.Class.extend({
 	_on: function (type, fn, context) {
 
 		var events = this._events = this._events || {},
-		    contextId = context && context !== this && L.stamp(context);
+		    contextId = context && context !== this && F.stamp(context);
 
 		if (contextId) {
 			// store listeners with custom context in a separate hash (if it has an id);
@@ -61,7 +61,7 @@ L.Evented = L.Class.extend({
 			var indexKey = type + '_idx',
 			    indexLenKey = type + '_len',
 			    typeIndex = events[indexKey] = events[indexKey] || {},
-			    id = L.stamp(fn) + '_' + contextId;
+			    id = F.stamp(fn) + '_' + contextId;
 
 			if (!typeIndex[id]) {
 				typeIndex[id] = {fn: fn, ctx: context};
@@ -94,11 +94,11 @@ L.Evented = L.Class.extend({
 			return;
 		}
 
-		var contextId = context && context !== this && L.stamp(context),
+		var contextId = context && context !== this && F.stamp(context),
 		    listeners, i, len, listener, id;
 
 		if (contextId) {
-			id = L.stamp(fn) + '_' + contextId;
+			id = F.stamp(fn) + '_' + contextId;
 			listeners = events[indexKey];
 
 			if (listeners && listeners[id]) {
@@ -123,14 +123,14 @@ L.Evented = L.Class.extend({
 
 		// set the removed listener to noop so that's not called if remove happens in fire
 		if (listener) {
-			listener.fn = L.Util.falseFn;
+			listener.fn = F.Util.falseFn;
 		}
 	},
 
 	fire: function (type, data, propagate) {
 		if (!this.listens(type, propagate)) { return this; }
 
-		var event = L.Util.extend({}, data, {type: type, target: this}),
+		var event = F.Util.extend({}, data, {type: type, target: this}),
 		    events = this._events;
 
 		if (events) {
@@ -183,7 +183,7 @@ L.Evented = L.Class.extend({
 			return this;
 		}
 
-		var handler = L.bind(function () {
+		var handler = F.bind(function () {
 			this
 			    .off(types, fn, context)
 			    .off(types, handler, context);
@@ -198,25 +198,25 @@ L.Evented = L.Class.extend({
 	// adds a parent to propagate events to (when you fire with true as a 3rd argument)
 	addEventParent: function (obj) {
 		this._eventParents = this._eventParents || {};
-		this._eventParents[L.stamp(obj)] = obj;
+		this._eventParents[F.stamp(obj)] = obj;
 		return this;
 	},
 
 	removeEventParent: function (obj) {
 		if (this._eventParents) {
-			delete this._eventParents[L.stamp(obj)];
+			delete this._eventParents[F.stamp(obj)];
 		}
 		return this;
 	},
 
 	_propagateEvent: function (e) {
 		for (var id in this._eventParents) {
-			this._eventParents[id].fire(e.type, L.extend({layer: e.target}, e), true);
+			this._eventParents[id].fire(e.type, F.Leaflet.extend({layer: e.target}, e), true);
 		}
 	}
 });
 
-var proto = L.Evented.prototype;
+var proto = F.Evented.prototype;
 
 // aliases; we should ditch those eventually
 proto.addEventListener = proto.on;
@@ -225,4 +225,4 @@ proto.addOneTimeEventListener = proto.once;
 proto.fireEvent = proto.fire;
 proto.hasEventListeners = proto.listens;
 
-L.Mixin = {Events: proto};
+F.Leaflet.Mixin = {Events: proto};

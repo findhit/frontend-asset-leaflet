@@ -1,8 +1,8 @@
 /*
- * L.Icon is an image-based icon class that you can use with L.Marker for custom markers.
+ * F.Leaflet.Icon is an image-based icon class that you can use with F.Leaflet.Marker for custom markers.
  */
 
-L.Icon = L.Class.extend({
+F.Leaflet.Icon = F.Class.extend({
 	/*
 	options: {
 		iconUrl: (String) (required)
@@ -19,7 +19,7 @@ L.Icon = L.Class.extend({
 	*/
 
 	initialize: function (options) {
-		L.setOptions(this, options);
+		F.Leaflet.setOptions(this, options);
 	},
 
 	createIcon: function (oldIcon) {
@@ -48,11 +48,11 @@ L.Icon = L.Class.extend({
 
 	_setIconStyles: function (img, name) {
 		var options = this.options,
-		    size = L.point(options[name + 'Size']),
-		    anchor = L.point(name === 'shadow' && options.shadowAnchor || options.iconAnchor ||
+		    size = F.Leaflet.point(options[name + 'Size']),
+		    anchor = F.Leaflet.point(name === 'shadow' && options.shadowAnchor || options.iconAnchor ||
 		            size && size.divideBy(2, true));
 
-		img.className = 'leaflet-marker-' + name + ' ' + (options.className || '');
+		img.className = 'marker-' + name + ' ' + (options.className || '');
 
 		if (anchor) {
 			img.style.marginLeft = (-anchor.x) + 'px';
@@ -72,10 +72,10 @@ L.Icon = L.Class.extend({
 	},
 
 	_getIconUrl: function (name) {
-		return L.Browser.retina && this.options[name + 'RetinaUrl'] || this.options[name + 'Url'];
+		return F.Browser.retina && this.options[name + 'RetinaUrl'] || this.options[name + 'Url'];
 	}
 });
 
-L.icon = function (options) {
-	return new L.Icon(options);
+F.Leaflet.icon = function (options) {
+	return new F.Leaflet.Icon(options);
 };

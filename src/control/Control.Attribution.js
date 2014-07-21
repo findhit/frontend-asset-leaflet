@@ -1,22 +1,22 @@
 /*
- * L.Control.Attribution is used for displaying attribution on the map (added by default).
+ * F.Leaflet.Control.Attribution is used for displaying attribution on the map (added by default).
  */
 
-L.Control.Attribution = L.Control.extend({
+F.Leaflet.Control.Attribution = F.Leaflet.Control.extend({
 	options: {
 		position: 'bottomright',
 		prefix: '<a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>'
 	},
 
 	initialize: function (options) {
-		L.setOptions(this, options);
+		F.Leaflet.setOptions(this, options);
 
 		this._attributions = {};
 	},
 
 	onAdd: function (map) {
-		this._container = L.DomUtil.create('div', 'leaflet-control-attribution');
-		L.DomEvent.disableClickPropagation(this._container);
+		this._container = F.DomUtil.create('div', 'control-attribution');
+		F.DomEvent.disableClickPropagation(this._container);
 
 		// TODO ugly, refactor
 		for (var i in map._layers) {
@@ -84,16 +84,16 @@ L.Control.Attribution = L.Control.extend({
 	}
 });
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	attributionControl: true
 });
 
-L.Map.addInitHook(function () {
+F.Leaflet.Map.addInitHook(function () {
 	if (this.options.attributionControl) {
-		this.attributionControl = (new L.Control.Attribution()).addTo(this);
+		this.attributionControl = (new F.Leaflet.Control.Attribution()).addTo(this);
 	}
 });
 
-L.control.attribution = function (options) {
-	return new L.Control.Attribution(options);
+F.Leaflet.control.attribution = function (options) {
+	return new F.Leaflet.Control.Attribution(options);
 };

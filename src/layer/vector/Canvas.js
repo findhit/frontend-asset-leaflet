@@ -1,11 +1,11 @@
 /*
- * L.Canvas handles Canvas vector layers rendering and mouse events handling. All Canvas-specific code goes here.
+ * F.Leaflet.Canvas handles Canvas vector layers rendering and mouse events handling. All Canvas-specific code goes here.
  */
 
-L.Canvas = L.Renderer.extend({
+F.Leaflet.Canvas = F.Leaflet.Renderer.extend({
 
 	onAdd: function () {
-		L.Renderer.prototype.onAdd.call(this);
+		F.Leaflet.Renderer.prototype.onAdd.call(this);
 
 		this._layers = this._layers || {};
 
@@ -16,7 +16,7 @@ L.Canvas = L.Renderer.extend({
 	_initContainer: function () {
 		var container = this._container = document.createElement('canvas');
 
-		L.DomEvent
+		F.DomEvent
 			.on(container, 'mousemove', this._onMouseMove, this)
 			.on(container, 'click dblclick mousedown mouseup contextmenu', this._onClick, this);
 
@@ -26,14 +26,14 @@ L.Canvas = L.Renderer.extend({
 	_update: function () {
 		if (this._map._animatingZoom && this._bounds) { return; }
 
-		L.Renderer.prototype._update.call(this);
+		F.Leaflet.Renderer.prototype._update.call(this);
 
 		var b = this._bounds,
 		    container = this._container,
 		    size = b.getSize(),
-		    m = L.Browser.retina ? 2 : 1;
+		    m = F.Browser.retina ? 2 : 1;
 
-		L.DomUtil.setPosition(container, b.min);
+		F.DomUtil.setPosition(container, b.min);
 
 		// set canvas size (also clearing it); use double size on retina
 		container.width = m * size.x;
@@ -41,7 +41,7 @@ L.Canvas = L.Renderer.extend({
 		container.style.width = size.x + 'px';
 		container.style.height = size.y + 'px';
 
-		if (L.Browser.retina) {
+		if (F.Browser.retina) {
 			this._ctx.scale(2, 2);
 		}
 
@@ -50,10 +50,10 @@ L.Canvas = L.Renderer.extend({
 	},
 
 	_initPath: function (layer) {
-		this._layers[L.stamp(layer)] = layer;
+		this._layers[F.stamp(layer)] = layer;
 	},
 
-	_addPath: L.Util.falseFn,
+	_addPath: F.Util.falseFn,
 
 	_removePath: function (layer) {
 		layer._removed = true;
@@ -76,10 +76,10 @@ L.Canvas = L.Renderer.extend({
 	_requestRedraw: function (layer) {
 		if (!this._map) { return; }
 
-		this._redrawBounds = this._redrawBounds || new L.Bounds();
+		this._redrawBounds = this._redrawBounds || new F.Leaflet.Bounds();
 		this._redrawBounds.extend(layer._pxBounds.min).extend(layer._pxBounds.max);
 
-		this._redrawRequest = this._redrawRequest || L.Util.requestAnimFrame(this._redraw, this);
+		this._redrawRequest = this._redrawRequest || F.Util.requestAnimFrame(this._redraw, this);
 	},
 
 	_redraw: function () {
@@ -212,7 +212,7 @@ L.Canvas = L.Renderer.extend({
 		if (layer._containsPoint(point)) {
 			// if we just got inside the layer, fire mouseover
 			if (!layer._mouseInside) {
-				L.DomUtil.addClass(this._container, 'leaflet-clickable'); // change cursor
+				F.DomUtil.addClass(this._container, 'clickable'); // change cursor
 				layer._fireMouseEvent(e, 'mouseover');
 				layer._mouseInside = true;
 			}
@@ -221,7 +221,7 @@ L.Canvas = L.Renderer.extend({
 
 		} else if (layer._mouseInside) {
 			// if we're leaving the layer, fire mouseout
-			L.DomUtil.removeClass(this._container, 'leaflet-clickable');
+			F.DomUtil.removeClass(this._container, 'clickable');
 			layer._fireMouseEvent(e, 'mouseout');
 			layer._mouseInside = false;
 		}
@@ -229,19 +229,19 @@ L.Canvas = L.Renderer.extend({
 
 	// TODO _bringToFront & _bringToBack, pretty tricky
 
-	_bringToFront: L.Util.falseFn,
-	_bringToBack: L.Util.falseFn
+	_bringToFront: F.Util.falseFn,
+	_bringToBack: F.Util.falseFn
 });
 
-L.Browser.canvas = (function () {
+F.Browser.canvas = (function () {
 	return !!document.createElement('canvas').getContext;
 }());
 
-L.canvas = function (options) {
-	return L.Browser.canvas ? new L.Canvas(options) : null;
+F.Leaflet.canvas = function (options) {
+	return F.Browser.canvas ? new F.Leaflet.Canvas(options) : null;
 };
 
-L.Polyline.prototype._containsPoint = function (p, closed) {
+F.Leaflet.Polyline.prototype._containsPoint = function (p, closed) {
 	var i, j, k, len, len2, part,
 	    w = this._clickTolerance();
 
@@ -254,7 +254,7 @@ L.Polyline.prototype._containsPoint = function (p, closed) {
 		for (j = 0, len2 = part.length, k = len2 - 1; j < len2; k = j++) {
 			if (!closed && (j === 0)) { continue; }
 
-			if (L.LineUtil.pointToSegmentDistance(p, part[k], part[j]) <= w) {
+			if (F.Leaflet.LineUtil.pointToSegmentDistance(p, part[k], part[j]) <= w) {
 				return true;
 			}
 		}
@@ -262,7 +262,7 @@ L.Polyline.prototype._containsPoint = function (p, closed) {
 	return false;
 };
 
-L.Polygon.prototype._containsPoint = function (p) {
+F.Leaflet.Polygon.prototype._containsPoint = function (p) {
 	var inside = false,
 	    part, p1, p2, i, j, k, len, len2;
 
@@ -283,9 +283,9 @@ L.Polygon.prototype._containsPoint = function (p) {
 	}
 
 	// also check if it's on polygon stroke
-	return inside || L.Polyline.prototype._containsPoint.call(this, p, true);
+	return inside || F.Leaflet.Polyline.prototype._containsPoint.call(this, p, true);
 };
 
-L.CircleMarker.prototype._containsPoint = function (p) {
+F.Leaflet.CircleMarker.prototype._containsPoint = function (p) {
 	return p.distanceTo(this._point) <= this._radius + this._clickTolerance();
 };

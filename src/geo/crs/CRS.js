@@ -1,8 +1,8 @@
 /*
- * L.CRS is the base object for all defined CRS (Coordinate Reference Systems) in Leaflet.
+ * F.Leaflet.CRS is the base object for all defined CRS (Coordinate Reference Systems) in Leaflet.
  */
 
-L.CRS = {
+F.Leaflet.CRS = {
 	// converts geo coords to pixel ones
 	latLngToPoint: function (latlng, zoom) {
 		var projectedPoint = this.projection.project(latlng),
@@ -43,7 +43,7 @@ L.CRS = {
 		    min = this.transformation.transform(b.min, s),
 		    max = this.transformation.transform(b.max, s);
 
-		return L.bounds(min, max);
+		return F.Leaflet.bounds(min, max);
 	},
 
 	// whether a coordinate axis wraps in a given range (e.g. longitude from -180 to 180); depends on CRS
@@ -55,9 +55,9 @@ L.CRS = {
 
 	// wraps geo coords in certain ranges if applicable
 	wrapLatLng: function (latlng) {
-		var lng = this.wrapLng ? L.Util.wrapNum(latlng.lng, this.wrapLng, true) : latlng.lng,
-		    lat = this.wrapLat ? L.Util.wrapNum(latlng.lat, this.wrapLat, true) : latlng.lat;
+		var lng = this.wrapLng ? F.Util.wrapNum(latlng.lng, this.wrapLng, true) : latlng.lng,
+		    lat = this.wrapLat ? F.Util.wrapNum(latlng.lat, this.wrapLat, true) : latlng.lat;
 
-		return L.latLng(lat, lng);
+		return F.Leaflet.latLng(lat, lng);
 	}
 };

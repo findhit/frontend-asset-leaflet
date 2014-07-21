@@ -1,8 +1,8 @@
 /*
- * L.Control.Layers is a control to allow users to switch between different layers on the map.
+ * F.Leaflet.Control.Layers is a control to allow users to switch between different layers on the map.
  */
 
-L.Control.Layers = L.Control.extend({
+F.Leaflet.Control.Layers = F.Leaflet.Control.extend({
 	options: {
 		collapsed: true,
 		position: 'topright',
@@ -10,7 +10,7 @@ L.Control.Layers = L.Control.extend({
 	},
 
 	initialize: function (baseLayers, overlays, options) {
-		L.setOptions(this, options);
+		F.Leaflet.setOptions(this, options);
 
 		this._layers = {};
 		this._lastZIndex = 0;
@@ -45,50 +45,50 @@ L.Control.Layers = L.Control.extend({
 	removeLayer: function (layer) {
 		layer.off('add remove', this._onLayerChange, this);
 
-		delete this._layers[L.stamp(layer)];
+		delete this._layers[F.stamp(layer)];
 		return this._update();
 	},
 
 	_initLayout: function () {
-		var className = 'leaflet-control-layers',
-		    container = this._container = L.DomUtil.create('div', className);
+		var className = 'control-layers',
+		    container = this._container = F.DomUtil.create('div', className);
 
 		// makes this work on IE touch devices by stopping it from firing a mouseout event when the touch is released
 		container.setAttribute('aria-haspopup', true);
 
-		if (!L.Browser.touch) {
-			L.DomEvent
+		if (!F.Browser.touch) {
+			F.DomEvent
 				.disableClickPropagation(container)
 				.disableScrollPropagation(container);
 		} else {
-			L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
+			F.DomEvent.on(container, 'click', F.DomEvent.stopPropagation);
 		}
 
-		var form = this._form = L.DomUtil.create('form', className + '-list');
+		var form = this._form = F.DomUtil.create('form', className + '-list');
 
 		if (this.options.collapsed) {
-			if (!L.Browser.android) {
-				L.DomEvent.on(container, {
+			if (!F.Browser.android) {
+				F.DomEvent.on(container, {
 					mouseenter: this._expand,
 					mouseleave: this._collapse
 				}, this);
 			}
 
-			var link = this._layersLink = L.DomUtil.create('a', className + '-toggle', container);
+			var link = this._layersLink = F.DomUtil.create('a', className + '-toggle', container);
 			link.href = '#';
 			link.title = 'Layers';
 
-			if (L.Browser.touch) {
-				L.DomEvent
-				    .on(link, 'click', L.DomEvent.stop)
+			if (F.Browser.touch) {
+				F.DomEvent
+				    .on(link, 'click', F.DomEvent.stop)
 				    .on(link, 'click', this._expand, this);
 			} else {
-				L.DomEvent.on(link, 'focus', this._expand, this);
+				F.DomEvent.on(link, 'focus', this._expand, this);
 			}
 
 			// work around for Firefox Android issue https://github.com/Leaflet/Leaflet/issues/2033
-			L.DomEvent.on(form, 'click', function () {
-				setTimeout(L.bind(this._onInputClick, this), 0);
+			F.DomEvent.on(form, 'click', function () {
+				setTimeout(F.bind(this._onInputClick, this), 0);
 			}, this);
 
 			this._map.on('click', this._collapse, this);
@@ -97,9 +97,9 @@ L.Control.Layers = L.Control.extend({
 			this._expand();
 		}
 
-		this._baseLayersList = L.DomUtil.create('div', className + '-base', form);
-		this._separator = L.DomUtil.create('div', className + '-separator', form);
-		this._overlaysList = L.DomUtil.create('div', className + '-overlays', form);
+		this._baseLayersList = F.DomUtil.create('div', className + '-base', form);
+		this._separator = F.DomUtil.create('div', className + '-separator', form);
+		this._overlaysList = F.DomUtil.create('div', className + '-overlays', form);
 
 		container.appendChild(form);
 	},
@@ -107,7 +107,7 @@ L.Control.Layers = L.Control.extend({
 	_addLayer: function (layer, name, overlay) {
 		layer.on('add remove', this._onLayerChange, this);
 
-		var id = L.stamp(layer);
+		var id = F.stamp(layer);
 
 		this._layers[id] = {
 			layer: layer,
@@ -124,8 +124,8 @@ L.Control.Layers = L.Control.extend({
 	_update: function () {
 		if (!this._container) { return; }
 
-		L.DomUtil.empty(this._baseLayersList);
-		L.DomUtil.empty(this._overlaysList);
+		F.DomUtil.empty(this._baseLayersList);
+		F.DomUtil.empty(this._overlaysList);
 
 		var baseLayersPresent, overlaysPresent, i, obj;
 
@@ -146,7 +146,7 @@ L.Control.Layers = L.Control.extend({
 			this._update();
 		}
 
-		var overlay = this._layers[L.stamp(e.target)].overlay;
+		var overlay = this._layers[F.stamp(e.target)].overlay;
 
 		var type = overlay ?
 			(e.type === 'add' ? 'overlayadd' : 'overlayremove') :
@@ -160,7 +160,7 @@ L.Control.Layers = L.Control.extend({
 	// IE7 bugs out if you create a radio dynamically, so you have to do it this hacky way (see http://bit.ly/PqYLBe)
 	_createRadioElement: function (name, checked) {
 
-		var radioHtml = '<input type="radio" class="leaflet-control-layers-selector" name="' +
+		var radioHtml = '<input type="radio" class="control-layers-selector" name="' +
 				name + '"' + (checked ? ' checked="checked"' : '') + '/>';
 
 		var radioFragment = document.createElement('div');
@@ -177,15 +177,15 @@ L.Control.Layers = L.Control.extend({
 		if (obj.overlay) {
 			input = document.createElement('input');
 			input.type = 'checkbox';
-			input.className = 'leaflet-control-layers-selector';
+			input.className = 'control-layers-selector';
 			input.defaultChecked = checked;
 		} else {
-			input = this._createRadioElement('leaflet-base-layers', checked);
+			input = this._createRadioElement('base-layers', checked);
 		}
 
-		input.layerId = L.stamp(obj.layer);
+		input.layerId = F.stamp(obj.layer);
 
-		L.DomEvent.on(input, 'click', this._onInputClick, this);
+		F.DomEvent.on(input, 'click', this._onInputClick, this);
 
 		var name = document.createElement('span');
 		name.innerHTML = ' ' + obj.name;
@@ -224,14 +224,14 @@ L.Control.Layers = L.Control.extend({
 	},
 
 	_expand: function () {
-		L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
+		F.DomUtil.addClass(this._container, 'control-layers-expanded');
 	},
 
 	_collapse: function () {
-		L.DomUtil.removeClass(this._container, 'leaflet-control-layers-expanded');
+		F.DomUtil.removeClass(this._container, 'control-layers-expanded');
 	}
 });
 
-L.control.layers = function (baseLayers, overlays, options) {
-	return new L.Control.Layers(baseLayers, overlays, options);
+F.Leaflet.control.layers = function (baseLayers, overlays, options) {
+	return new F.Leaflet.Control.Layers(baseLayers, overlays, options);
 };

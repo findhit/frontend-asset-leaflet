@@ -1,29 +1,29 @@
 /*
- * Extends L.Map to handle zoom animations.
+ * Extends F.Leaflet.Map to handle zoom animations.
  */
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	zoomAnimation: true,
 	zoomAnimationThreshold: 4
 });
 
-var zoomAnimated = L.DomUtil.TRANSITION && L.Browser.any3d && !L.Browser.mobileOpera;
+var zoomAnimated = F.DomUtil.TRANSITION && F.Browser.any3d && !F.Browser.mobileOpera;
 
 if (zoomAnimated) {
 
-	L.Map.addInitHook(function () {
+	F.Leaflet.Map.addInitHook(function () {
 		// don't animate on browsers without hardware-accelerated transitions or old Android/Opera
 		this._zoomAnimated = this.options.zoomAnimation;
 
 		// zoom transitions run with the same duration for all layers, so if one of transitionend events
 		// happens after starting zoom animation (propagating to the map pane), we know that it ended globally
 		if (this._zoomAnimated) {
-			L.DomEvent.on(this._mapPane, L.DomUtil.TRANSITION_END, this._catchTransitionEnd, this);
+			F.DomEvent.on(this._mapPane, F.DomUtil.TRANSITION_END, this._catchTransitionEnd, this);
 		}
 	});
 }
 
-L.Map.include(!zoomAnimated ? {} : {
+F.Leaflet.Map.include(!zoomAnimated ? {} : {
 
 	_catchTransitionEnd: function (e) {
 		if (this._animatingZoom && e.propertyName.indexOf('transform') >= 0) {
@@ -32,7 +32,7 @@ L.Map.include(!zoomAnimated ? {} : {
 	},
 
 	_nothingToAnimate: function () {
-		return !this._container.getElementsByClassName('leaflet-zoom-animated').length;
+		return !this._container.getElementsByClassName('zoom-animated').length;
 	},
 
 	_tryAnimatedZoom: function (center, zoom, options) {
@@ -52,7 +52,7 @@ L.Map.include(!zoomAnimated ? {} : {
 		// don't animate if the zoom origin isn't within one screen from the current center, unless forced
 		if (options.animate !== true && !this.getSize().contains(offset)) { return false; }
 
-		L.Util.requestAnimFrame(function () {
+		F.Util.requestAnimFrame(function () {
 			this
 			    .fire('movestart')
 			    .fire('zoomstart')
@@ -71,11 +71,11 @@ L.Map.include(!zoomAnimated ? {} : {
 			this._animateToZoom = zoom;
 
 			// disable any dragging during animation
-			if (L.Draggable) {
-				L.Draggable._disabled = true;
+			if (F.Leaflet.Draggable) {
+				F.Leaflet.Draggable._disabled = true;
 			}
 
-			L.DomUtil.addClass(this._mapPane, 'leaflet-zoom-anim');
+			F.DomUtil.addClass(this._mapPane, 'zoom-anim');
 		}
 
 		var scale = this.getZoomScale(zoom),
@@ -93,12 +93,12 @@ L.Map.include(!zoomAnimated ? {} : {
 
 		this._animatingZoom = false;
 
-		L.DomUtil.removeClass(this._mapPane, 'leaflet-zoom-anim');
+		F.DomUtil.removeClass(this._mapPane, 'zoom-anim');
 
 		this._resetView(this._animateToCenter, this._animateToZoom, true, true);
 
-		if (L.Draggable) {
-			L.Draggable._disabled = false;
+		if (F.Leaflet.Draggable) {
+			F.Leaflet.Draggable._disabled = false;
 		}
 	}
 });

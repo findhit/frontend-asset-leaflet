@@ -1,9 +1,9 @@
 /*
- * L.LayerGroup is a class to combine several layers into one so that
+ * F.Leaflet.LayerGroup is a class to combine several layers into one so that
  * you can manipulate the group (e.g. add/remove it) as one layer.
  */
 
-L.LayerGroup = L.Layer.extend({
+F.Leaflet.LayerGroup = F.Leaflet.Layer.extend({
 
 	initialize: function (layers) {
 		this._layers = {};
@@ -104,10 +104,10 @@ L.LayerGroup = L.Layer.extend({
 	},
 
 	getLayerId: function (layer) {
-		return L.stamp(layer);
+		return F.stamp(layer);
 	}
 });
 
-L.layerGroup = function (layers) {
-	return new L.LayerGroup(layers);
+F.Leaflet.layerGroup = function (layers) {
+	return new F.Leaflet.LayerGroup(layers);
 };

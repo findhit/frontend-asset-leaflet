@@ -1,12 +1,12 @@
 /*
- * L.Handler.DoubleClickZoom is used to handle double-click zoom on the map, enabled by default.
+ * F.Leaflet.Handler.DoubleClickZoom is used to handle double-click zoom on the map, enabled by default.
  */
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	doubleClickZoom: true
 });
 
-L.Map.DoubleClickZoom = L.Handler.extend({
+F.Leaflet.Map.DoubleClickZoom = F.Leaflet.Handler.extend({
 	addHooks: function () {
 		this._map.on('dblclick', this._onDoubleClick, this);
 	},
@@ -27,4 +27,4 @@ L.Map.DoubleClickZoom = L.Handler.extend({
 	}
 });
 
-L.Map.addInitHook('addHandler', 'doubleClickZoom', L.Map.DoubleClickZoom);
+F.Leaflet.Map.addInitHook('addHandler', 'doubleClickZoom', F.Leaflet.Map.DoubleClickZoom);

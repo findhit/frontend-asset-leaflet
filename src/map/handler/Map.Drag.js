@@ -1,26 +1,26 @@
 /*
- * L.Handler.MapDrag is used to make the map draggable (with panning inertia), enabled by default.
+ * F.Leaflet.Handler.MapDrag is used to make the map draggable (with panning inertia), enabled by default.
  */
 
-L.Map.mergeOptions({
+F.Leaflet.Map.mergeOptions({
 	dragging: true,
 
-	inertia: !L.Browser.android23,
+	inertia: !F.Browser.android23,
 	inertiaDeceleration: 3400, // px/s^2
 	inertiaMaxSpeed: Infinity, // px/s
-	inertiaThreshold: L.Browser.touch ? 32 : 18, // ms
+	inertiaThreshold: F.Browser.touch ? 32 : 18, // ms
 	easeLinearity: 0.25,
 
 	// TODO refactor, move to CRS
 	worldCopyJump: false
 });
 
-L.Map.Drag = L.Handler.extend({
+F.Leaflet.Map.Drag = F.Leaflet.Handler.extend({
 	addHooks: function () {
 		if (!this._draggable) {
 			var map = this._map;
 
-			this._draggable = new L.Draggable(map._mapPane, map._container);
+			this._draggable = new F.Leaflet.Draggable(map._mapPane, map._container);
 
 			this._draggable.on({
 				down: this._onDown,
@@ -139,7 +139,7 @@ L.Map.Drag = L.Handler.extend({
 			} else {
 				offset = map._limitOffset(offset, map.options.maxBounds);
 
-				L.Util.requestAnimFrame(function () {
+				F.Util.requestAnimFrame(function () {
 					map.panBy(offset, {
 						duration: decelerationDuration,
 						easeLinearity: ease,
@@ -151,4 +151,4 @@ L.Map.Drag = L.Handler.extend({
 	}
 });
 
-L.Map.addInitHook('addHandler', 'dragging', L.Map.Drag);
+F.Leaflet.Map.addInitHook('addHandler', 'dragging', F.Leaflet.Map.Drag);

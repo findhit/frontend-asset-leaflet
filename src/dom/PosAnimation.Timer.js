@@ -1,9 +1,9 @@
 /*
- * L.PosAnimation fallback implementation that powers Leaflet pan animations
+ * F.PosAnimation fallback implementation that powers Leaflet pan animations
  * in browsers that don't support CSS3 Transitions.
  */
 
-L.PosAnimation = L.DomUtil.TRANSITION ? L.PosAnimation : L.PosAnimation.extend({
+F.PosAnimation = F.DomUtil.TRANSITION ? F.PosAnimation : F.PosAnimation.extend({
 
 	run: function (el, newPos, duration, easeLinearity) { // (HTMLElement, Point[, Number, Number])
 		this.stop();
@@ -13,7 +13,7 @@ L.PosAnimation = L.DomUtil.TRANSITION ? L.PosAnimation : L.PosAnimation.extend({
 		this._duration = duration || 0.25;
 		this._easeOutPower = 1 / Math.max(easeLinearity || 0.5, 0.2);
 
-		this._startPos = L.DomUtil.getPosition(el);
+		this._startPos = F.DomUtil.getPosition(el);
 		this._offset = newPos.subtract(this._startPos);
 		this._startTime = +new Date();
 
@@ -31,7 +31,7 @@ L.PosAnimation = L.DomUtil.TRANSITION ? L.PosAnimation : L.PosAnimation.extend({
 
 	_animate: function () {
 		// animation loop
-		this._animId = L.Util.requestAnimFrame(this._animate, this);
+		this._animId = F.Util.requestAnimFrame(this._animate, this);
 		this._step();
 	},
 
@@ -49,13 +49,13 @@ L.PosAnimation = L.DomUtil.TRANSITION ? L.PosAnimation : L.PosAnimation.extend({
 
 	_runFrame: function (progress) {
 		var pos = this._startPos.add(this._offset.multiplyBy(progress));
-		L.DomUtil.setPosition(this._el, pos);
+		F.DomUtil.setPosition(this._el, pos);
 
 		this.fire('step');
 	},
 
 	_complete: function () {
-		L.Util.cancelAnimFrame(this._animId);
+		F.Util.cancelAnimFrame(this._animId);
 
 		this._inProgress = false;
 		this.fire('end');

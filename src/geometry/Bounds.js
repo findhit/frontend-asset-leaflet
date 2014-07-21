@@ -1,8 +1,8 @@
 /*
- * L.Bounds represents a rectangular area on the screen in pixel coordinates.
+ * F.Leaflet.Bounds represents a rectangular area on the screen in pixel coordinates.
  */
 
-L.Bounds = function (a, b) { //(Point, Point) or Point[]
+F.Leaflet.Bounds = function (a, b) { //(Point, Point) or Point[]
 	if (!a) { return; }
 
 	var points = b ? [a, b] : a;
@@ -12,10 +12,10 @@ L.Bounds = function (a, b) { //(Point, Point) or Point[]
 	}
 };
 
-L.Bounds.prototype = {
+F.Leaflet.Bounds.prototype = {
 	// extend the bounds to contain the given point
 	extend: function (point) { // (Point)
-		point = L.point(point);
+		point = F.Leaflet.point(point);
 
 		if (!this.min && !this.max) {
 			this.min = point.clone();
@@ -30,17 +30,17 @@ L.Bounds.prototype = {
 	},
 
 	getCenter: function (round) { // (Boolean) -> Point
-		return new L.Point(
+		return new F.Leaflet.Point(
 		        (this.min.x + this.max.x) / 2,
 		        (this.min.y + this.max.y) / 2, round);
 	},
 
 	getBottomLeft: function () { // -> Point
-		return new L.Point(this.min.x, this.max.y);
+		return new F.Leaflet.Point(this.min.x, this.max.y);
 	},
 
 	getTopRight: function () { // -> Point
-		return new L.Point(this.max.x, this.min.y);
+		return new F.Leaflet.Point(this.max.x, this.min.y);
 	},
 
 	getSize: function () {
@@ -50,13 +50,13 @@ L.Bounds.prototype = {
 	contains: function (obj) { // (Bounds) or (Point) -> Boolean
 		var min, max;
 
-		if (typeof obj[0] === 'number' || obj instanceof L.Point) {
-			obj = L.point(obj);
+		if (typeof obj[0] === 'number' || obj instanceof F.Leaflet.Point) {
+			obj = F.Leaflet.point(obj);
 		} else {
-			obj = L.bounds(obj);
+			obj = F.Leaflet.bounds(obj);
 		}
 
-		if (obj instanceof L.Bounds) {
+		if (obj instanceof F.Leaflet.Bounds) {
 			min = obj.min;
 			max = obj.max;
 		} else {
@@ -70,7 +70,7 @@ L.Bounds.prototype = {
 	},
 
 	intersects: function (bounds) { // (Bounds) -> Boolean
-		bounds = L.bounds(bounds);
+		bounds = F.Leaflet.bounds(bounds);
 
 		var min = this.min,
 		    max = this.max,
@@ -87,9 +87,9 @@ L.Bounds.prototype = {
 	}
 };
 
-L.bounds = function (a, b) { // (Bounds) or (Point, Point) or (Point[])
-	if (!a || a instanceof L.Bounds) {
+F.Leaflet.bounds = function (a, b) { // (Bounds) or (Point, Point) or (Point[])
+	if (!a || a instanceof F.Leaflet.Bounds) {
 		return a;
 	}
-	return new L.Bounds(a, b);
+	return new F.Leaflet.Bounds(a, b);
 };

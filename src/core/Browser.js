@@ -1,5 +1,5 @@
 /*
- * L.Browser handles different browser and feature detections for internal Leaflet use.
+ * F.Browser handles different browser and feature detections for internal Leaflet use.
  */
 
 (function () {
@@ -34,7 +34,7 @@
 	var touch = !window.L_NO_TOUCH && !phantomjs && (pointer || 'ontouchstart' in window ||
 			(window.DocumentTouch && document instanceof window.DocumentTouch));
 
-	L.Browser = {
+	F.Browser = {
 		ie: ie,
 		ielt9: ie && !document.addEventListener,
 		webkit: webkit,

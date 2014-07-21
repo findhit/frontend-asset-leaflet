@@ -1,8 +1,8 @@
 /*
- * L.Path is the base class for all Leaflet vector layers like polygons and circles.
+ * F.Leaflet.Path is the base class for all Leaflet vector layers like polygons and circles.
  */
 
-L.Path = L.Layer.extend({
+F.Leaflet.Path = F.Leaflet.Layer.extend({
 
 	options: {
 		stroke: true,
@@ -52,7 +52,7 @@ L.Path = L.Layer.extend({
 	},
 
 	setStyle: function (style) {
-		L.setOptions(this, style);
+		F.Leaflet.setOptions(this, style);
 		if (this._renderer) {
 			this._renderer._updateStyle(this);
 		}
@@ -75,6 +75,6 @@ L.Path = L.Layer.extend({
 
 	_clickTolerance: function () {
 		// used when doing hit detection for Canvas layers
-		return (this.options.stroke ? this.options.weight / 2 : 0) + (L.Browser.touch ? 10 : 0);
+		return (this.options.stroke ? this.options.weight / 2 : 0) + (F.Browser.touch ? 10 : 0);
 	}
 });

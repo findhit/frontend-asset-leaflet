@@ -1,13 +1,13 @@
 /*
- * Extends L.DomEvent to provide touch support for Internet Explorer and Windows-based devices.
+ * Extends F.DomEvent to provide touch support for Internet Explorer and Windows-based devices.
  */
 
-L.extend(L.DomEvent, {
+F.Leaflet.extend(F.DomEvent, {
 
-	POINTER_DOWN:   L.Browser.msPointer ? 'MSPointerDown'   : 'pointerdown',
-	POINTER_MOVE:   L.Browser.msPointer ? 'MSPointerMove'   : 'pointermove',
-	POINTER_UP:     L.Browser.msPointer ? 'MSPointerUp'     : 'pointerup',
-	POINTER_CANCEL: L.Browser.msPointer ? 'MSPointerCancel' : 'pointercancel',
+	POINTER_DOWN:   F.Browser.msPointer ? 'MSPointerDown'   : 'pointerdown',
+	POINTER_MOVE:   F.Browser.msPointer ? 'MSPointerMove'   : 'pointermove',
+	POINTER_UP:     F.Browser.msPointer ? 'MSPointerUp'     : 'pointerup',
+	POINTER_CANCEL: F.Browser.msPointer ? 'MSPointerCancel' : 'pointercancel',
 
 	_pointers: {},
 
@@ -47,8 +47,8 @@ L.extend(L.DomEvent, {
 	},
 
 	_addPointerStart: function (obj, handler, id) {
-		var onDown = L.bind(function (e) {
-			L.DomEvent.preventDefault(e);
+		var onDown = F.bind(function (e) {
+			F.DomEvent.preventDefault(e);
 
 			this._pointers[e.pointerId] = e;
 			this._handlePointer(e, handler);
@@ -59,7 +59,7 @@ L.extend(L.DomEvent, {
 
 		// need to also listen for end events to keep the _pointers object accurate
 		if (!this._pointerDocListener) {
-			var removePointer = L.bind(function (e) {
+			var removePointer = F.bind(function (e) {
 				delete this._pointers[e.pointerId];
 			}, this);
 
@@ -82,7 +82,7 @@ L.extend(L.DomEvent, {
 	},
 
 	_addPointerMove: function (obj, handler, id) {
-		var onMove = L.bind(function (e) {
+		var onMove = F.bind(function (e) {
 			// don't fire touch moves when mouse isn't down
 			if ((e.pointerType === e.MSPOINTER_TYPE_MOUSE || e.pointerType === 'mouse') && e.buttons === 0) { return; }
 
@@ -95,7 +95,7 @@ L.extend(L.DomEvent, {
 	},
 
 	_addPointerEnd: function (obj, handler, id) {
-		var onUp = L.bind(function (e) {
+		var onUp = F.bind(function (e) {
 			delete this._pointers[e.pointerId];
 			this._handlePointer(e, handler);
 		}, this);

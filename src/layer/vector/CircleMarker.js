@@ -1,8 +1,8 @@
 /*
- * L.CircleMarker is a circle overlay with a permanent pixel radius.
+ * F.Leaflet.CircleMarker is a circle overlay with a permanent pixel radius.
  */
 
-L.CircleMarker = L.Path.extend({
+F.Leaflet.CircleMarker = F.Leaflet.Path.extend({
 
 	options: {
 		fill: true,
@@ -10,13 +10,13 @@ L.CircleMarker = L.Path.extend({
 	},
 
 	initialize: function (latlng, options) {
-		L.setOptions(this, options);
-		this._latlng = L.latLng(latlng);
+		F.Leaflet.setOptions(this, options);
+		this._latlng = F.Leaflet.latLng(latlng);
 		this._radius = this.options.radius;
 	},
 
 	setLatLng: function (latlng) {
-		this._latlng = L.latLng(latlng);
+		this._latlng = F.Leaflet.latLng(latlng);
 		this.redraw();
 		return this.fire('move', {latlng: this._latlng});
 	},
@@ -36,7 +36,7 @@ L.CircleMarker = L.Path.extend({
 
 	setStyle : function (options) {
 		var radius = options && options.radius || this._radius;
-		L.Path.prototype.setStyle.call(this, options);
+		F.Leaflet.Path.prototype.setStyle.call(this, options);
 		this.setRadius(radius);
 		return this;
 	},
@@ -51,7 +51,7 @@ L.CircleMarker = L.Path.extend({
 		    r2 = this._radiusY || r,
 		    w = this._clickTolerance(),
 		    p = [r + w, r2 + w];
-		this._pxBounds = new L.Bounds(this._point.subtract(p), this._point.add(p));
+		this._pxBounds = new F.Leaflet.Bounds(this._point.subtract(p), this._point.add(p));
 	},
 
 	_update: function () {
@@ -69,6 +69,6 @@ L.CircleMarker = L.Path.extend({
 	}
 });
 
-L.circleMarker = function (latlng, options) {
-	return new L.CircleMarker(latlng, options);
+F.Leaflet.circleMarker = function (latlng, options) {
+	return new F.Leaflet.CircleMarker(latlng, options);
 };

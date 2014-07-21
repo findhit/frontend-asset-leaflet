@@ -6,7 +6,7 @@ var L = {
 function expose() {
 	var oldL = window.L;
 
-	L.noConflict = function () {
+	F.Leaflet.noConflict = function () {
 		window.L = oldL;
 		return this;
 	};

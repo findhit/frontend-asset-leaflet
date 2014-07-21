@@ -1,11 +1,11 @@
 /*
- * L.DomEvent contains functions for working with DOM events.
+ * F.DomEvent contains functions for working with DOM events.
  * Inspired by John Resig, Dean Edwards and YUI addEvent implementations.
  */
 
 var eventsKey = '_leaflet_events';
 
-L.DomEvent = {
+F.DomEvent = {
 
 	on: function (obj, types, fn, context) {
 
@@ -14,7 +14,7 @@ L.DomEvent = {
 				this._on(obj, type, types[type], fn);
 			}
 		} else {
-			types = L.Util.splitWords(types);
+			types = F.Util.splitWords(types);
 
 			for (var i = 0, len = types.length; i < len; i++) {
 				this._on(obj, types[i], fn, context);
@@ -31,7 +31,7 @@ L.DomEvent = {
 				this._off(obj, type, types[type], fn);
 			}
 		} else {
-			types = L.Util.splitWords(types);
+			types = F.Util.splitWords(types);
 
 			for (var i = 0, len = types.length; i < len; i++) {
 				this._off(obj, types[i], fn, context);
@@ -42,7 +42,7 @@ L.DomEvent = {
 	},
 
 	_on: function (obj, type, fn, context) {
-		var id = type + L.stamp(fn) + (context ? '_' + L.stamp(context) : '');
+		var id = type + F.stamp(fn) + (context ? '_' + F.stamp(context) : '');
 
 		if (obj[eventsKey] && obj[eventsKey][id]) { return this; }
 
@@ -52,10 +52,10 @@ L.DomEvent = {
 
 		var originalHandler = handler;
 
-		if (L.Browser.pointer && type.indexOf('touch') === 0) {
+		if (F.Browser.pointer && type.indexOf('touch') === 0) {
 			return this.addPointerListener(obj, type, handler, id);
 		}
-		if (L.Browser.touch && (type === 'dblclick') && this.addDoubleTapListener) {
+		if (F.Browser.touch && (type === 'dblclick') && this.addDoubleTapListener) {
 			this.addDoubleTapListener(obj, handler, id);
 		}
 
@@ -68,15 +68,15 @@ L.DomEvent = {
 			} else if ((type === 'mouseenter') || (type === 'mouseleave')) {
 				handler = function (e) {
 					e = e || window.event;
-					if (!L.DomEvent._checkMouse(obj, e)) { return; }
+					if (!F.DomEvent._checkMouse(obj, e)) { return; }
 					return originalHandler(e);
 				};
 				obj.addEventListener(type === 'mouseenter' ? 'mouseover' : 'mouseout', handler, false);
 
 			} else {
-				if (type === 'click' && L.Browser.android) {
+				if (type === 'click' && F.Browser.android) {
 					handler = function (e) {
-						return L.DomEvent._filterClick(e, originalHandler);
+						return F.DomEvent._filterClick(e, originalHandler);
 					};
 				}
 				obj.addEventListener(type, handler, false);
@@ -94,15 +94,15 @@ L.DomEvent = {
 
 	_off: function (obj, type, fn, context) {
 
-		var id = type + L.stamp(fn) + (context ? '_' + L.stamp(context) : ''),
+		var id = type + F.stamp(fn) + (context ? '_' + F.stamp(context) : ''),
 		    handler = obj[eventsKey] && obj[eventsKey][id];
 
 		if (!handler) { return this; }
 
-		if (L.Browser.pointer && type.indexOf('touch') === 0) {
+		if (F.Browser.pointer && type.indexOf('touch') === 0) {
 			this.removePointerListener(obj, type, id);
 
-		} else if (L.Browser.touch && (type === 'dblclick') && this.removeDoubleTapListener) {
+		} else if (F.Browser.touch && (type === 'dblclick') && this.removeDoubleTapListener) {
 			this.removeDoubleTapListener(obj, id);
 
 		} else if ('removeEventListener' in obj) {
@@ -133,22 +133,22 @@ L.DomEvent = {
 		} else {
 			e.cancelBubble = true;
 		}
-		L.DomEvent._skipped(e);
+		F.DomEvent._skipped(e);
 
 		return this;
 	},
 
 	disableScrollPropagation: function (el) {
-		return L.DomEvent.on(el, 'mousewheel MozMousePixelScroll', L.DomEvent.stopPropagation);
+		return F.DomEvent.on(el, 'mousewheel MozMousePixelScroll', F.DomEvent.stopPropagation);
 	},
 
 	disableClickPropagation: function (el) {
-		var stop = L.DomEvent.stopPropagation;
+		var stop = F.DomEvent.stopPropagation;
 
-		L.DomEvent.on(el, L.Draggable.START.join(' '), stop);
+		F.DomEvent.on(el, F.Leaflet.Draggable.START.join(' '), stop);
 
-		return L.DomEvent.on(el, {
-			click: L.DomEvent._fakeStop,
+		return F.DomEvent.on(el, {
+			click: F.DomEvent._fakeStop,
 			dblclick: stop
 		});
 	},
@@ -164,19 +164,19 @@ L.DomEvent = {
 	},
 
 	stop: function (e) {
-		return L.DomEvent
+		return F.DomEvent
 			.preventDefault(e)
 			.stopPropagation(e);
 	},
 
 	getMousePosition: function (e, container) {
 		if (!container) {
-			return new L.Point(e.clientX, e.clientY);
+			return new F.Leaflet.Point(e.clientX, e.clientY);
 		}
 
 		var rect = container.getBoundingClientRect();
 
-		return new L.Point(
+		return new F.Leaflet.Point(
 			e.clientX - rect.left - container.clientLeft,
 			e.clientY - rect.top - container.clientTop);
 	},
@@ -197,8 +197,8 @@ L.DomEvent = {
 	_skipEvents: {},
 
 	_fakeStop: function (e) {
-		// fakes stopPropagation by setting a special event flag, checked/reset with L.DomEvent._skipped(e)
-		L.DomEvent._skipEvents[e.type] = true;
+		// fakes stopPropagation by setting a special event flag, checked/reset with F.DomEvent._skipped(e)
+		F.DomEvent._skipEvents[e.type] = true;
 	},
 
 	_skipped: function (e) {
@@ -228,7 +228,7 @@ L.DomEvent = {
 	// this is a horrible workaround for a bug in Android where a single touch triggers two click events
 	_filterClick: function (e, handler) {
 		var timeStamp = (e.timeStamp || e.originalEvent.timeStamp),
-			elapsed = L.DomEvent._lastClick && (timeStamp - L.DomEvent._lastClick);
+			elapsed = F.DomEvent._lastClick && (timeStamp - F.DomEvent._lastClick);
 
 		// are they closer together than 500ms yet more than 100ms?
 		// Android typically triggers them ~300ms apart while multiple listeners
@@ -236,14 +236,14 @@ L.DomEvent = {
 		// or check if click is simulated on the element, and if it is, reject any non-simulated events
 
 		if ((elapsed && elapsed > 100 && elapsed < 500) || (e.target._simulatedClick && !e._simulated)) {
-			L.DomEvent.stop(e);
+			F.DomEvent.stop(e);
 			return;
 		}
-		L.DomEvent._lastClick = timeStamp;
+		F.DomEvent._lastClick = timeStamp;
 
 		return handler(e);
 	}
 };
 
-L.DomEvent.addListener = L.DomEvent.on;
-L.DomEvent.removeListener = L.DomEvent.off;
+F.DomEvent.addListener = F.DomEvent.on;
+F.DomEvent.removeListener = F.DomEvent.off;

@@ -1,13 +1,13 @@
 /*
- * Extends L.Map to handle panning animations.
+ * Extends F.Leaflet.Map to handle panning animations.
  */
 
-L.Map.include({
+F.Leaflet.Map.include({
 
 	setView: function (center, zoom, options) {
 
 		zoom = zoom === undefined ? this._zoom : this._limitZoom(zoom);
-		center = this._limitCenter(L.latLng(center), zoom, this.options.maxBounds);
+		center = this._limitCenter(F.Leaflet.latLng(center), zoom, this.options.maxBounds);
 		options = options || {};
 
 		if (this._panAnim) {
@@ -17,8 +17,8 @@ L.Map.include({
 		if (this._loaded && !options.reset && options !== true) {
 
 			if (options.animate !== undefined) {
-				options.zoom = L.extend({animate: options.animate}, options.zoom);
-				options.pan = L.extend({animate: options.animate}, options.pan);
+				options.zoom = F.Leaflet.extend({animate: options.animate}, options.zoom);
+				options.pan = F.Leaflet.extend({animate: options.animate}, options.pan);
 			}
 
 			// try animating pan or zoom
@@ -40,7 +40,7 @@ L.Map.include({
 	},
 
 	panBy: function (offset, options) {
-		offset = L.point(offset).round();
+		offset = F.Leaflet.point(offset).round();
 		options = options || {};
 
 		if (!offset.x && !offset.y) {
@@ -53,7 +53,7 @@ L.Map.include({
 		}
 
 		if (!this._panAnim) {
-			this._panAnim = new L.PosAnimation();
+			this._panAnim = new F.PosAnimation();
 
 			this._panAnim.on({
 				'step': this._onPanTransitionStep,
@@ -68,7 +68,7 @@ L.Map.include({
 
 		// animate pan unless animate: false specified
 		if (options.animate !== false) {
-			L.DomUtil.addClass(this._mapPane, 'leaflet-pan-anim');
+			F.DomUtil.addClass(this._mapPane, 'pan-anim');
 
 			var newPos = this._getMapPanePos().subtract(offset);
 			this._panAnim.run(this._mapPane, newPos, options.duration || 0.25, options.easeLinearity);
@@ -85,7 +85,7 @@ L.Map.include({
 	},
 
 	_onPanTransitionEnd: function () {
-		L.DomUtil.removeClass(this._mapPane, 'leaflet-pan-anim');
+		F.DomUtil.removeClass(this._mapPane, 'pan-anim');
 		this.fire('moveend');
 	},
 

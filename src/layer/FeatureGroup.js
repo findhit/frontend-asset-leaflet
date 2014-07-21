@@ -1,9 +1,9 @@
 /*
- * L.FeatureGroup extends L.LayerGroup by introducing mouse events and additional methods
+ * F.Leaflet.FeatureGroup extends F.Leaflet.LayerGroup by introducing mouse events and additional methods
  * shared between a group of interactive layers (like vectors or markers).
  */
 
-L.FeatureGroup = L.LayerGroup.extend({
+F.Leaflet.FeatureGroup = F.Leaflet.LayerGroup.extend({
 
 	addLayer: function (layer) {
 		if (this.hasLayer(layer)) {
@@ -12,7 +12,7 @@ L.FeatureGroup = L.LayerGroup.extend({
 
 		layer.addEventParent(this);
 
-		L.LayerGroup.prototype.addLayer.call(this, layer);
+		F.Leaflet.LayerGroup.prototype.addLayer.call(this, layer);
 
 		if (this._popupContent && layer.bindPopup) {
 			layer.bindPopup(this._popupContent, this._popupOptions);
@@ -31,7 +31,7 @@ L.FeatureGroup = L.LayerGroup.extend({
 
 		layer.removeEventParent(this);
 
-		L.LayerGroup.prototype.removeLayer.call(this, layer);
+		F.Leaflet.LayerGroup.prototype.removeLayer.call(this, layer);
 
 		if (this._popupContent) {
 			this.invoke('unbindPopup');
@@ -68,7 +68,7 @@ L.FeatureGroup = L.LayerGroup.extend({
 	},
 
 	getBounds: function () {
-		var bounds = new L.LatLngBounds();
+		var bounds = new F.Leaflet.LatLngBounds();
 
 		this.eachLayer(function (layer) {
 			bounds.extend(layer.getBounds ? layer.getBounds() : layer.getLatLng());
@@ -78,6 +78,6 @@ L.FeatureGroup = L.LayerGroup.extend({
 	}
 });
 
-L.featureGroup = function (layers) {
-	return new L.FeatureGroup(layers);
+F.Leaflet.featureGroup = function (layers) {
+	return new F.Leaflet.FeatureGroup(layers);
 };
