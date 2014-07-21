@@ -38,6 +38,18 @@ F.Leaflet.LatLng.prototype = {
 		return F.Leaflet.CRS.Earth.distance(this, F.Leaflet.latLng(other));
 	},
 
+	getBoundsFrom: function ( distance ) {
+		var lat, lng;
+
+		lat = 180 * distance / 40075017;
+		lng = lat / Math.cos( ( Math.PI / 180 ) * this.lat );
+
+		return new F.Leaflet.LatLngBounds(
+			[ this.lat - lat, this.lng - lng ],
+			[ this.lat + lat, this.lng + lng ]
+		);
+	},
+
 	wrap: function () {
 		return F.Leaflet.CRS.Earth.wrapLatLng(this);
 	}
