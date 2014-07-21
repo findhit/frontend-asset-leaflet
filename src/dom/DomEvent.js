@@ -3,7 +3,7 @@
  * Inspired by John Resig, Dean Edwards and YUI addEvent implementations.
  */
 
-var eventsKey = '_leaflet_events';
+var eventsKey = '_findhit_events';
 
 F.DomEvent = {
 
@@ -19,6 +19,24 @@ F.DomEvent = {
 			for (var i = 0, len = types.length; i < len; i++) {
 				this._on(obj, types[i], fn, context);
 			}
+		}
+
+		return this;
+	},
+
+	once: function ( obj, types, fn, context){
+		var that = this;
+
+		types = types.split(' ');
+
+		for( var i in types ){
+			if( types[i] === '' ) continue;
+			var type = types[i];
+			
+			this.on(obj, type, function (e){
+				fn.call( context || obj, e );
+				that.off(obj, type, arguments.callee);
+			},context);
 		}
 
 		return this;
@@ -41,13 +59,75 @@ F.DomEvent = {
 		return this;
 	},
 
+
+	fire: function ( el, type, ext){
+
+		if (document.createEvent) {
+			e = document.createEvent("HTMLEvents");
+			e.initEvent(type, true, true);
+		} else {
+			e = document.createEventObject();
+			e.eventType = type;
+		}
+
+		if(typeof ext == 'object') F.Util.extend(e,ext);
+		e.eventName = type;
+
+		if (document.createEvent) {
+			el.dispatchEvent(e);
+		} else {
+			el.fireEvent("on" + type, e);
+		}
+
+		return e;
+	},
+
+	fireOn: function ( el, interval, type, ext) {
+		if ( ! interval || ! parseInt( interval ) > 0 || ! type ) return this;
+
+		var that = this;
+
+		setTimeout( function () {
+			that.fire( el, type, ext );
+		}, interval );
+
+		return this;
+	},
+
 	_on: function (obj, type, fn, context) {
+
+		// But it could be (HTMLElement, String, String, Function[, Object])
+		if( arguments.length > 3 && typeof arguments[2] == 'string' ){
+			// change variables
+			var filter = arguments[2],
+				fn = arguments[3],
+				context = arguments[4] || undefined;
+		}
+
 		var id = type + F.stamp(fn) + (context ? '_' + F.stamp(context) : '');
 
 		if (obj[eventsKey] && obj[eventsKey][id]) { return this; }
 
 		var handler = function (e) {
+
+			// If we have a filter and the target doesn't match our filter, return
+			if( filter ){
+				if( e.target.matches(filter) ) {
+					e.filterTarget = e.target;
+					fn.call(context || e.filterTarget, e || window.event);
+				}
+
+				// Now check parents
+				e.target.parents( filter ).each(function (){
+					e.filterTarget = this;
+					fn.call(context || e.filterTarget, e || window.event);
+				});
+
+				return;
+			}
+
 			return fn.call(context || obj, e || window.event);
+
 		};
 
 		var originalHandler = handler;
@@ -247,3 +327,51 @@ F.DomEvent = {
 
 F.DomEvent.addListener = F.DomEvent.on;
 F.DomEvent.removeListener = F.DomEvent.off;
+F.DomEvent.addOnceListener = F.DomEvent.once;
+F.DomEvent.trigger = F.DomEvent.dispatch = F.DomEvent.fire;
+F.DomEvent.triggerOn = F.DomEvent.dispatchOn = F.DomEvent.fireOn;
+
+
+(function () {
+	var proxy = function (fn, el, oarguments){
+
+		if(
+			typeof fn != 'string' ||
+			typeof el != 'object' ||
+			typeof oarguments != 'object' ||
+			typeof F.DomEvent[fn] != 'function'
+		) return false;
+
+		// Prepend el to arguments
+		var args = [el]; for( var i in oarguments ) args.push(oarguments[i]);
+		var res = F.DomEvent[fn].apply(F.DomEvent, args);
+
+		return ( res != F.DomEvent ) ? res : el;
+	};
+
+	F.Proto.Doc.on = F.Proto.Doc.addListener =
+	F.Proto.Elem.on = F.Proto.Elem.addListener =
+	F.Proto.Win.on = F.Proto.Win.addListener =
+		function (){ return proxy('on',this,arguments); };
+
+	F.Proto.Doc.off = F.Proto.Doc.removeListener = 
+	F.Proto.Elem.off = F.Proto.Elem.removeListener =
+	F.Proto.Win.off = F.Proto.Win.removeListener =
+		function (){ return proxy('off',this,arguments); };
+
+	F.Proto.Doc.once = F.Proto.Doc.addOnceListener =
+	F.Proto.Elem.once = F.Proto.Elem.addOnceListener =
+	F.Proto.Win.once = F.Proto.Win.addOnceListener =
+		function (){ return proxy('once',this,arguments); };
+
+	F.Proto.Doc.fire = F.Proto.Doc.trigger = F.Proto.Doc.dispatch =
+	F.Proto.Elem.fire = F.Proto.Elem.trigger = F.Proto.Elem.dispatch =
+	F.Proto.Win.fire = F.Proto.Win.trigger = F.Proto.Win.dispatch =
+		function (){ return proxy('fire',this,arguments); };
+
+	F.Proto.Doc.fireOn = F.Proto.Doc.triggerOn = F.Proto.Doc.dispatchOn =
+	F.Proto.Elem.fireOn = F.Proto.Elem.triggerOn = F.Proto.Elem.dispatchOn =
+	F.Proto.Win.fireOn = F.Proto.Win.triggerOn = F.Proto.Win.dispatchOn =
+		function (){ return proxy('fireOn',this,arguments); };
+
+}());
