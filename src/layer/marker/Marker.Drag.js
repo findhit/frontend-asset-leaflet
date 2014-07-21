@@ -11,7 +11,7 @@ F.Leaflet.Handler.MarkerDrag = F.Leaflet.Handler.extend({
 		var icon = this._marker._icon;
 
 		if (!this._draggable) {
-			this._draggable = new F.Leaflet.Draggable(icon, icon);
+			this._draggable = new F.Dom.Draggable(icon, icon);
 		}
 
 		this._draggable.on({

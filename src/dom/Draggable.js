@@ -1,8 +1,8 @@
 /*
- * F.Leaflet.Draggable allows you to add dragging capabilities to any element. Supports mobile devices too.
+ * F.Dom.Draggable allows you to add dragging capabilities to any element. Supports mobile devices too.
  */
 
-F.Leaflet.Draggable = F.Evented.extend({
+F.Dom.Draggable = F.Evented.extend({
 
 	statics: {
 		START: F.Browser.touch ? ['touchstart', 'mousedown'] : ['mousedown'],
@@ -28,7 +28,7 @@ F.Leaflet.Draggable = F.Evented.extend({
 	enable: function () {
 		if (this._enabled) { return; }
 
-		F.DomEvent.on(this._dragStartTarget, F.Leaflet.Draggable.START.join(' '), this._onDown, this);
+		F.DomEvent.on(this._dragStartTarget, F.Dom.Draggable.START.join(' '), this._onDown, this);
 
 		this._enabled = true;
 	},
@@ -36,7 +36,7 @@ F.Leaflet.Draggable = F.Evented.extend({
 	disable: function () {
 		if (!this._enabled) { return; }
 
-		F.DomEvent.off(this._dragStartTarget, F.Leaflet.Draggable.START.join(' '), this._onDown, this);
+		F.DomEvent.off(this._dragStartTarget, F.Dom.Draggable.START.join(' '), this._onDown, this);
 
 		this._enabled = false;
 		this._moved = false;
@@ -49,7 +49,7 @@ F.Leaflet.Draggable = F.Evented.extend({
 
 		F.DomEvent.stopPropagation(e);
 
-		if (F.Leaflet.Draggable._disabled) { return; }
+		if (F.Dom.Draggable._disabled) { return; }
 
 		F.DomUtil.disableImageDrag();
 		F.DomUtil.disableTextSelection();
@@ -64,8 +64,8 @@ F.Leaflet.Draggable = F.Evented.extend({
 		this._startPos = this._newPos = F.DomUtil.getPosition(this._element);
 
 		F.DomEvent
-		    .on(document, F.Leaflet.Draggable.MOVE[e.type], this._onMove, this)
-		    .on(document, F.Leaflet.Draggable.END[e.type], this._onUp, this);
+		    .on(document, F.Dom.Draggable.MOVE[e.type], this._onMove, this)
+		    .on(document, F.Dom.Draggable.END[e.type], this._onUp, this);
 	},
 
 	_onMove: function (e) {
@@ -116,10 +116,10 @@ F.Leaflet.Draggable = F.Evented.extend({
 			this._lastTarget = null;
 		}
 
-		for (var i in F.Leaflet.Draggable.MOVE) {
+		for (var i in F.Dom.Draggable.MOVE) {
 			F.DomEvent
-			    .off(document, F.Leaflet.Draggable.MOVE[i], this._onMove, this)
-			    .off(document, F.Leaflet.Draggable.END[i], this._onUp, this);
+			    .off(document, F.Dom.Draggable.MOVE[i], this._onMove, this)
+			    .off(document, F.Dom.Draggable.END[i], this._onUp, this);
 		}
 
 		F.DomUtil.enableImageDrag();

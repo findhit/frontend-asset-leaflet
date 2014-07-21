@@ -20,7 +20,7 @@ F.Leaflet.Map.Drag = F.Leaflet.Handler.extend({
 		if (!this._draggable) {
 			var map = this._map;
 
-			this._draggable = new F.Leaflet.Draggable(map._mapPane, map._container);
+			this._draggable = new F.Dom.Draggable(map._mapPane, map._container);
 
 			this._draggable.on({
 				down: this._onDown,

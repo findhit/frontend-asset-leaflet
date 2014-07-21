@@ -145,7 +145,7 @@ F.DomEvent = {
 	disableClickPropagation: function (el) {
 		var stop = F.DomEvent.stopPropagation;
 
-		F.DomEvent.on(el, F.Leaflet.Draggable.START.join(' '), stop);
+		F.DomEvent.on(el, F.Dom.Draggable.START.join(' '), stop);
 
 		return F.DomEvent.on(el, {
 			click: F.DomEvent._fakeStop,

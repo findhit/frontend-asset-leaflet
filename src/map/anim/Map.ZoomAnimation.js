@@ -71,8 +71,8 @@ F.Leaflet.Map.include(!zoomAnimated ? {} : {
 			this._animateToZoom = zoom;
 
 			// disable any dragging during animation
-			if (F.Leaflet.Draggable) {
-				F.Leaflet.Draggable._disabled = true;
+			if (F.Dom.Draggable) {
+				F.Dom.Draggable._disabled = true;
 			}
 
 			F.DomUtil.addClass(this._mapPane, 'zoom-anim');
@@ -97,8 +97,8 @@ F.Leaflet.Map.include(!zoomAnimated ? {} : {
 
 		this._resetView(this._animateToCenter, this._animateToZoom, true, true);
 
-		if (F.Leaflet.Draggable) {
-			F.Leaflet.Draggable._disabled = false;
+		if (F.Dom.Draggable) {
+			F.Dom.Draggable._disabled = false;
 		}
 	}
 });
