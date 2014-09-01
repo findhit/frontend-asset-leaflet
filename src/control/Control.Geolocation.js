@@ -59,10 +59,14 @@ F.Leaflet.Control.Geolocation = F.Leaflet.Control.extend({
 			fillOpacity: 0.20,
 		});
 
-		if ( F.Geolocation.pos )
-			this._onPosition();
-		else
-			F.Geolocation.on( 'found', this._onPosition, this );
+		map.whenReady(function () {
+
+			if ( F.Geolocation.pos )
+				that._onPosition();
+			else
+				F.Geolocation.on( 'found', that._onPosition, that );
+
+		});
 
 		return container;
 	},
@@ -117,6 +121,10 @@ F.Leaflet.Control.Geolocation = F.Leaflet.Control.extend({
 	},
 
 	_onPosition: function () {
+
+		// Why did you called me???
+		if ( ! F.Geolocation.pos || this._map._ready ) return;
+
 		var G = F.Geolocation,
 			firstPos = ! this.pos,
 			pos = this.pos = G.pos,
@@ -124,9 +132,6 @@ F.Leaflet.Control.Geolocation = F.Leaflet.Control.extend({
 			map = this._map,
 			marker = this._marker,
 			circle = this._circle;
-
-		// Why did you called me???
-		if ( ! pos ) return;
 
 		// Place our Locater marker and circle into the right position
 		marker
