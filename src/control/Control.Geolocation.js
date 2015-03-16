@@ -126,6 +126,8 @@ F.Leaflet.Control.Geolocation = F.Leaflet.Control.extend({
 		if ( ! F.Geolocation.pos || this._map._ready ) return;
 
 		var G = F.Geolocation,
+			cs = F.History._currentState,
+			z = cs.param( 'z' ),
 			firstPos = ! this.pos,
 			pos = this.pos = G.pos,
 			o = this.options,
@@ -169,6 +171,10 @@ F.Leaflet.Control.Geolocation = F.Leaflet.Control.extend({
 			map.fitBounds( G.bounds, ( firstPos && o.geolocationFirstPosZoom ) && {
 				maxZoom: o.geolocationFirstPosZoom,
 			} || {} );
+
+			if( z ){
+                 map.setZoom( z );
+            }
 
 		}
 
