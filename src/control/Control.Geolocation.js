@@ -5,6 +5,7 @@ F.Leaflet.Control.Geolocation = F.Leaflet.Control.extend({
 		assetsBase: '/assets/img/map',
 		followingOnPositionAvailable: false,
 		geolocationFirstPosZoom: 18, // or false
+        geolocationZoom: false,
 	},
 
 	following: false,
@@ -169,6 +170,10 @@ F.Leaflet.Control.Geolocation = F.Leaflet.Control.extend({
 			map.fitBounds( G.bounds, ( firstPos && o.geolocationFirstPosZoom ) && {
 				maxZoom: o.geolocationFirstPosZoom,
 			} || {} );
+
+            if( o.geolocationZoom ){
+                map.setZoom( o.geolocationZoom );
+            }
 
 		}
 
